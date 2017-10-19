@@ -72,6 +72,10 @@ public class Rule {
     public int getOutput() {
         return output;
     }
+    
+    public int getOutputLength() {
+        return 1; //if there were multiple outputs, then we will return the output arrays length.
+    }
 
     public void setOutput(int output) {
         this.output = output;

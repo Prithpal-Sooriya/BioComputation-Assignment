@@ -5,6 +5,7 @@
  */
 package assignment.task1;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -50,6 +51,42 @@ public class Individual {
     public int getGenesLength() {
         return genes.length;
     }
+    
+    //since we are using a class, we need a way of converting the class into a binary/int array
+    //so we can use it for mutation and crossover.
+    public Integer[] getGenesAsArray() {
+        int sizeOfIntArray = genes.length * (genes[0].getConditionLength() + genes[0].getOutputLength());
+        ArrayList<Integer> integerList = new ArrayList<>();
+        //now we need to populate the array
+        for (Rule rule : genes) {
+            for (int i = 0; i < rule.getConditionLength(); i++) {
+                integerList.add(rule.getConditionValueFromIndex(i)); //add the conditions of each rule
+            }
+            integerList.add(rule.getOutput()); //add the output of each rule
+        }
+        
+        //now we can return this concatenation
+        Integer[] array = integerList.toArray(new Integer[sizeOfIntArray]);
+        return array;
+    }
+    
+    //this might break (from where the arrayIndex is incremented.
+    public void setGenesFromArray(Integer[] array) {
+        //so we need to convert this integer array back into the list
+        int arrayIndex = 0;
+        for (int i = 0; i < genes.length; i++) {
+            //set the new condition
+            for (int j = 0; j < genes[i].getConditionLength(); j++) {
+                genes[i].setConditionValueFromIndex(j, array[arrayIndex]);
+                arrayIndex++;
+            }
+            //set new output
+            genes[i].setOutput(array[arrayIndex]);
+            arrayIndex++;
+            
+        }
+    }
+    
     
     public void setGenes(Rule[] genes) {
         this.genes = genes;
