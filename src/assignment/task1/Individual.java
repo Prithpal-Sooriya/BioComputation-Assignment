@@ -54,7 +54,7 @@ public class Individual {
     
     //since we are using a class, we need a way of converting the class into a binary/int array
     //so we can use it for mutation and crossover.
-    public Integer[] getGenesAsArray() {
+    public Integer[] decodeGenes() {
         int sizeOfIntArray = genes.length * (genes[0].getConditionLength() + genes[0].getOutputLength());
         ArrayList<Integer> integerList = new ArrayList<>();
         //now we need to populate the array
@@ -71,7 +71,7 @@ public class Individual {
     }
     
     //this might break (from where the arrayIndex is incremented.
-    public void setGenesFromArray(Integer[] array) {
+    public void encodeGenes(Integer[] array) {
         //so we need to convert this integer array back into the list
         int arrayIndex = 0;
         for (int i = 0; i < genes.length; i++) {
@@ -92,6 +92,14 @@ public class Individual {
         this.genes = genes;
     }
 
+    public void setGeneFromIndex(int i, Rule rule) {
+        genes[i] = rule;
+    }
+    
+    public Rule getGeneFromIndex(int i) {
+        return genes[i];
+    }
+    
     public double getFitness() {
         return fitness;
     }

@@ -16,8 +16,6 @@ public class Crossover {
     private Crossover() {
     }
 
-    ;
-    
     public static Individual[] singlePointCrossover(Individual parent1, Individual parent2, double CROSSOVER_RATE) {
 
         Individual children[] = new Individual[2];
@@ -25,8 +23,8 @@ public class Crossover {
         //check if should crossover
         if (CROSSOVER_RATE > Math.random()) {
             //decode Rules -> int array
-            Integer[] decodedDNA1 = parent1.getGenesAsArray();
-            Integer[] decodedDNA2 = parent2.getGenesAsArray();
+            Integer[] decodedDNA1 = parent1.decodeGenes();
+            Integer[] decodedDNA2 = parent2.decodeGenes();
 
             //begin crossover
             Random rand = new Random();
@@ -40,8 +38,8 @@ public class Crossover {
                     decodedDNA2[i] = decodedDNA1[i];
                 }
             }
-            parent1.setGenesFromArray(decodedDNA1);
-            parent2.setGenesFromArray(decodedDNA2);
+            parent1.encodeGenes(decodedDNA1);
+            parent2.encodeGenes(decodedDNA2);
         }
         //encode int array -> Rules
         children[0] = parent1;
@@ -50,4 +48,31 @@ public class Crossover {
         return children;
     }
 
+    //rule based GA (GARP) also uses inversion for crossover (where the order or the rules are changed)
+    public static Individual inversionCrossover(Individual ind) {
+        //get 2 points
+        Random rand = new Random();
+        int startIndex = rand.nextInt(ind.getGenesLength());
+        int endIndex = rand.nextInt(ind.getGenesLength());
+        //just in case to ensure that the index's are different
+        while (endIndex == startIndex) {
+            endIndex = rand.nextInt(ind.getGenesLength());
+        }
+
+        //invert this section
+        while(startIndex >= endIndex){
+            //we can swap
+            Rule tempGene = ind.getGene(startIndex);
+            ind.setGeneFromIndex(startIndex, ind.getGeneFromIndex(endIndex));
+            ind.setGeneFromIndex(endIndex, tempGene);
+            
+            //change pointer locations
+            startIndex++;
+            endIndex--;
+        }
+        
+        //return this member of the population
+        return ind;
+        
+    }
 }
