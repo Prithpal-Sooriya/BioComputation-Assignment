@@ -13,10 +13,17 @@
   - can be done by giving a higher mutation rate just to the output part only.
 
 - NOTE: that Rule based GA (GARP) can also use inversion crossover
-  - inversion crossover = pick 2 points, and reverse the sublist from those 2 points in the genes
+  - inversion crossover = pick 2 points, and reverse the sub-list from those 2 points in the genes
 
 - NOTE: We may need to consider fitness function VS diversity of new population.
   - by having the most diverse and fittest, then we can increase search space/search more broadly.
 
 - NOTE: consider this when looking at test3.txt
   - http://www.obitko.com/tutorials/genetic-algorithms/crossover-mutation.php
+
+=========================================
+TODO:
+- inversion crossover = DONE
+- generic mutation function
+- fitness function that allows generics
+- try running test1.
