@@ -34,7 +34,7 @@ public class FitnessFunction {
                 //compare each rule in the ruleset to the genes of the individual
                 for (int j = 0; j < rule.getConditionLength(); j++) { //loop through each condition
                     if (rule.getConditionValueFromIndex(j)
-                            == individual.getGene(i).getConditionValueFromIndex(j)) {
+                            == individual.getGeneFromIndex(i).getConditionValueFromIndex(j)) {
                         tempFitness++;
                     }
                 }
@@ -64,7 +64,7 @@ public class FitnessFunction {
                 //compare each rule in the ruleset to the genes of the individual
                 for (int j = 0; j < rule.getConditionLength(); j++) { //loop through each condition
                     if (rule.getConditionValueFromIndex(j)
-                            == individual.getGene(i).getConditionValueFromIndex(j)) {
+                            == individual.getGeneFromIndex(i).getConditionValueFromIndex(j)) {
                         allCorrect++;
                     }
                 }

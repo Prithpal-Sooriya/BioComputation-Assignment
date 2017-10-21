@@ -39,10 +39,6 @@ public class Individual {
     }
     
     /*Setters and Getters*/
-    public Rule getGene(int i) {
-        //need index out of bounds checks later
-        return genes[i];
-    }
 
     public Rule[] getGenes() {
         return genes;
@@ -85,11 +81,6 @@ public class Individual {
             arrayIndex++;
             
         }
-    }
-    
-    
-    public void setGenes(Rule[] genes) {
-        this.genes = genes;
     }
 
     public void setGeneFromIndex(int i, Rule rule) {
