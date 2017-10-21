@@ -21,9 +21,15 @@
 - NOTE: consider this when looking at test3.txt
   - http://www.obitko.com/tutorials/genetic-algorithms/crossover-mutation.php
 
-=========================================
+------------------------------------------
 TODO:
 - inversion crossover = DONE
-- generic mutation function
+- generic mutation function = DONE
+- output mutation function = DONE
 - fitness function that allows generics
 - try running test1.
+
+------------------------------------------
+RESEARCH:
+- added research folder
+  - contains the information I was using for research and notes that I have made about them (can be used for my report).

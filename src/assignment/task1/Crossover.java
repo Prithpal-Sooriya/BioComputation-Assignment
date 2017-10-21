@@ -62,7 +62,7 @@ public class Crossover {
         //invert this section
         while(startIndex >= endIndex){
             //we can swap
-            Rule tempGene = ind.getGene(startIndex);
+            Rule tempGene = ind.getGeneFromIndex(startIndex);
             ind.setGeneFromIndex(startIndex, ind.getGeneFromIndex(endIndex));
             ind.setGeneFromIndex(endIndex, tempGene);
             

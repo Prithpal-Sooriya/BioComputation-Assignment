@@ -1,0 +1,82 @@
+THIS RESEARCH IS FOUND IN A BOOK!!!
+https://books.google.co.uk/books?id=sQJ1PMEOOY0C&pg=PA455&lpg=PA455&dq=Blanz,+Tou+and+Heydorn,+and+Watanabe&source=bl&ots=4JOKPAek6P&sig=jNmQTpNlDPosooSJEYQyu7m4eLM&hl=en&sa=X&ved=0ahUKEwiBxaf8pYLXAhXJVhoKHV3AAm4Q6AEIKjAA#v=onepage&q=Blanz%2C%20Tou%20and%20Heydorn%2C%20and%20Watanabe&f=false
+- use this to get the reference later!!!
+
+Rule induction = Machine Learning technique used for creating rules from a large dataset
+  - "Rule induction is an area of machine learning in which formal rules are extracted from a set of observations. The rules extracted may represent a full scientific model of the data, or merely represent local patterns in the data."
+    - https://en.wikipedia.org/wiki/Rule_induction
+
+Feature selection
+- how to select the best data to be used for rule induction (for the GA)
+  - this is essentially rule reduction
+    - "Data reduction is the transformation of numerical or alphabetical digital information derived empirically or experimentally into a corrected, ordered, and simplified form."
+    - "The basic concept is the reduction of multitudinous amounts of data down to the meaningful parts."
+      - https://en.wikipedia.org/wiki/Data_reduction
+- find optimal subset of features to use (from a larger set of set of features).
+
+1st method for feature selection
+- select features independent of their effect on classification performance.
+- transform features according to some procedures = Karhunen-Loeve or Fisher [Kittler 75; Tou,67]
+  - data compression and data reduction (used for facial feature... cool!)
+  - forms a new set of features to lower dimensionality than original.
+
+  - problem = difficult to identify set of transformations so that smaller set of features preserve most of the information.
+  - problem = NEEDS TO BE MORE RELIABLE THAN ORIGINAL, so that this new set removes noise and redundant features.
+
+2nd method for feature selection
+- directly select subset (d) from available features (m)
+  - select in such a way as to not significantly degrade performance of the classifier system.
+  - other people have used this method and done other things with it
+    - e.g. branch and bound technique on subset (d)
+    - e.g. take first features in subset (d)
+
+  - problem = how to account for dependencies between features
+    - e.g. when ordering them initially and selecting an effective subset in a later step.
+
+Feature selection - deal with unavailable data
+- depends on how much data is available or not (sparse data can be very hard to use)
+- data that is not too sparse may still be able to use.
+  - for data that is unavailable, we can ignore that feature entirely
+    (this can be wasteful)
+
+Feature selection - searching for features
+  - large datasets can be hard to search for data.
+  - exhaustive searching can guarantee data, but is computationally expensive.
+  - non exhaustive searching is better computationally, but can pose problems (back tracking)
+    - however these can prevent combinatorial explosion.
+      - but this also means that they do not consider inter-dependencies that may exist when choosing a feature.
+
+Feature selection - GA for searching for features
+  - not really related to our problem... but still may hold some important information.
+
+GA Representation for feature selection
+- genes = binary
+  - each bit is a feature, so 5 features is 11111
+  - 1=include feature, 0=exclude feature (so we don't use feature), so 11110 is where the last feature is eliminated.
+
+AQ Algorithm
+- VERY USEFUL FOR POTENTIALLY TASK 3
+- used to produce complete and consistent description of classes of examples
+  - class description = collection of disjuncts of decision rules describing training examples.
+    - gives allowable set of feature values.
+- examples of decision rules for an AQ algorithm
+
+<x1, x2, x3, x4, x5.... x9> are the features
+IF[x1 = 3 to 7] AND [x4 = 4 to 9] AND [x8 = 1 to 10] THEN OUTPUT(could be binary output, or some other form of output)
+- https://i.gyazo.com/a8b21d9a5820a4bd884df70dd28f4573.png link to show this can be used for AND's and OR's in conjunction to give an output
+
+AQ Fitness function
+- use testing samples/data
+- for every example matched are evaluated with the output.
+- if there is more than one rule having the highest/same match
+  - 1 rule will be selected based on the chosen conflict resolution process. (conflict resolution) --> SELECT A RULE
+
+- when a rule is selected, we will compare its output to the desired output.
+
+- after the examples have all been classified, the overall fitness is added
+  - adding the WEIGHTED SUM OF EACH MATCH SCORE of all the CORRECT RECOGNITIONS and subtracting WEIGHTED SUM OF INCORRECT RECOGNITIONS
+    - Weighted sum of correct - weighted sum of incorrect
+      - weighted = total correct/size (weighted for each individual)
+
+- This is basically a mix of NN with GA to get fitness function!
+  - weights are found from the conflict resolution part.
