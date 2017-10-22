@@ -24,7 +24,7 @@ public class Mutation {
     NOTE: this will be basic mutation, where each Rule condition AND output will change at same mutation rate.
     NOTE: we will also not be including generics into this (where # can be represented as 2)
      */
-    public Individual mutationBasic(Individual ind, double MUTATION_RATE) {
+    public static Individual mutationBasic(Individual ind, double MUTATION_RATE) {
         Rule newRule;
         for (int i = 0; i < ind.getGenesLength(); i++) { //loop through each genes
             newRule = ind.getGeneFromIndex(i);
@@ -52,7 +52,7 @@ public class Mutation {
         --> if generics makes the fitness worse, then remove
         --> if generics make teh fitness better, then it will be kept (this is usually more of the case!
      */
-    public Individual mutationGenerics(Individual ind, double MUTATION_RATE) {
+    public static Individual mutationGenerics(Individual ind, double MUTATION_RATE) {
         Rule newRule;
         Random rand = new Random();
         for (int i = 0; i < ind.getGenesLength(); i++) { //loop through genes
@@ -90,7 +90,7 @@ public class Mutation {
     For example, if the conditions for a rule are correct but the output is incorrect,
     I could give the output exclusively a higher mutation rate?
     */
-    public Rule mutationOutput(Rule rule, double MUTATION_RATE_OUTPUT) {
+    public static Rule mutationOutput(Rule rule, double MUTATION_RATE_OUTPUT) {
         if(MUTATION_RATE_OUTPUT > Math.random()) {
             rule.setOutput(rule.getOutput()^1);
         }

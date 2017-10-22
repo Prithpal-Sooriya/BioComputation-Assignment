@@ -31,7 +31,12 @@ public class FitnessFunction {
     }
 
     //EDIT: NEEDED TO ACCOMODATE GENERIC CONDITIONS
-    public static Individual fitnessFunctionCompareConditions(Rule[] trainingRuleset, Individual individual) {
+    public static void fitnessFunctionCompareConditionsAll(Rule[] trainingRuleset, Individual[] population){
+        for (int i = 0; i < population.length; i++) {
+            population[i] = fitnessFunctionCompareConditionsSingle(trainingRuleset, population[i]);
+        }
+    }
+    public static Individual fitnessFunctionCompareConditionsSingle(Rule[] trainingRuleset, Individual individual) {
 
         double tempFitness = 0;
 

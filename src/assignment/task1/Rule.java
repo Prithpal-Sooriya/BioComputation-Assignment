@@ -19,8 +19,15 @@ public class Rule {
     private int[] condition;
     private int output;
 
+    //this one is to be used for the genes
     public Rule(int sizeOfCondition, int output) {
         this.condition = new int[sizeOfCondition];
+        this.output = output;
+    }
+
+    //this is to be used for the actual data/training and testing data
+    public Rule(int[] condition, int output) {
+        this.condition = condition;
         this.output = output;
     }
 
@@ -33,30 +40,28 @@ public class Rule {
         //randomise output
         rule.setOutput(rand.nextInt(2));
     }
-    
-    
+
     /*getters and setters*/
     public int getConditionValueFromIndex(int i) {
-        if(i >= condition.length) {
+        if (i >= condition.length) {
             return -1; //need to check for this
         }
         return condition[i];
     }
-    
+
     public void setConditionValueFromIndex(int i, int val) {
-        if(val < 0 || val > 1 ) {
-            //error!!!
-            System.err.println("SetConditionValueFromIndex - Val error: val = " + val);
-        }
-        else if(i >= condition.length){
+//        if(val < 0 || val > 1 ) {
+//            //error!!!
+//            System.err.println("SetConditionValueFromIndex - Val error: val = " + val);
+//        }
+        if (i >= condition.length) {
             //error
             System.err.println("SetConditionValueFromIndex - Index error: index = " + i);
-        }
-        else {
+        } else {
             condition[i] = val;
         }
     }
-    
+
     public int getConditionLength() {
         return condition.length;
     }
@@ -72,7 +77,7 @@ public class Rule {
     public int getOutput() {
         return output;
     }
-    
+
     public int getOutputLength() {
         return 1; //if there were multiple outputs, then we will return the output arrays length.
     }
@@ -84,7 +89,7 @@ public class Rule {
     /*to string*/
     @Override
     public String toString() {
-        return "" + Arrays.toString(condition) + "," + output+"\n";
+        return "" + Arrays.toString(condition) + "," + output + "\n";
     }
 
 }

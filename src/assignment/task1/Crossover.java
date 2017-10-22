@@ -60,19 +60,48 @@ public class Crossover {
         }
 
         //invert this section
-        while(startIndex >= endIndex){
+        while (startIndex >= endIndex) {
             //we can swap
             Rule tempGene = ind.getGeneFromIndex(startIndex);
             ind.setGeneFromIndex(startIndex, ind.getGeneFromIndex(endIndex));
             ind.setGeneFromIndex(endIndex, tempGene);
-            
+
             //change pointer locations
             startIndex++;
             endIndex--;
         }
-        
+
         //return this member of the population
         return ind;
+
+    }
+
+    /*
+    Random crossover
+    This is where we randomly choose to crossover a piece or not.
+     */
+    public static Individual[] randomCrossover(Individual parent1, Individual parent2, double CROSSOVER_RATE) {
+        Individual children[] = new Individual[2];
+
+        if (CROSSOVER_RATE > Math.random()) {
+            Integer[] decodedDNA1 = parent1.decodeGenes();
+            Integer[] decodedDNA2 = parent2.decodeGenes();
+
+            for (int i = 0; i < decodedDNA1.length; i++) {
+                if (Math.random() > 0.5) { //50% chance of random swap
+                    //swap
+                    int temp = decodedDNA1[i];
+                    decodedDNA1[i] = decodedDNA2[i];
+                    decodedDNA2[i] = temp;
+                }
+            }
+            parent1.encodeGenes(decodedDNA1);
+            parent2.encodeGenes(decodedDNA2);
+        }
         
+        children[0] = parent1;
+        children[1] = parent2;
+
+        return children;
     }
 }
