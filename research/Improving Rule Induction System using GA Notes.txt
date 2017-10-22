@@ -79,4 +79,12 @@ AQ Fitness function
       - weighted = total correct/size (weighted for each individual)
 
 - This is basically a mix of NN with GA to get fitness function!
-  - weights are found from the conflict resolution part.
+  - weights are given to each gene randomly (maybe) or can be physically given to specific genes.
+
+AQ Conflict resolutions
+- always try to select the highest matching gene to the rule
+  - if 2 or more genes have the same highest matching to the rule = conflict resolution
+  - select the gene with most typicality (so the gene which has the most matches out of all the rules OR most rules it can cover)
+
+  - if 2 or more genes have highest matching AND typicality --> randomly select gene.
+- weights can also give an importance for which rule should be selected in conflict resolutions.
