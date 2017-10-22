@@ -25,7 +25,7 @@ public class SimpleGA {
     final static int POPULATION_SIZE = 50;
     final static int GENE_SIZE = 50;
     final static double CROSSOVER_RATE = 0.9; //should be between 0.6-0.9 (60% - 90%) --> almost always there will be crossover, small chance of cloning
-    final static double MUTATION_RATE = 0.02; //should be between 1/popsize - 1/genesize (1/50 = 0.02) --> however I found this to be too high last time.. so I made it even smaller
+    final static double MUTATION_RATE = 0.002; //should be between 1/popsize - 1/genesize (1/50 = 0.02) --> however I found this to be too high last time.. so I made it even smaller
 
     public static void main(String[] args) {
         Individual[] population = new Individual[POPULATION_SIZE];
@@ -41,8 +41,10 @@ public class SimpleGA {
             printImportantInfo(population);
 
             fitnessFunction(population);
+            
+            
 
-            population = selection_crossover_mutation(population, CROSSOVER_RATE, MUTATION_RATE);
+            population = selection_crossover_mutation(population);
 
             numberOfGenerations++;
         }
@@ -52,19 +54,19 @@ public class SimpleGA {
 
     //stop condition (this is only for the gaSimple, im not sure what the stop condition for the coursework might be...
     public static boolean reachedTarget(Individual[] population, int target) {
-        boolean targetNotReached = true;
         for (Individual individual : population) {
-            if (Arrays.stream(individual.genes).sum() == target) {
-                targetNotReached = false;
+            individual.setFitness(Arrays.stream(individual.genes).sum());
+            if (individual.getFitness() >= target) {
+                return false;
             }
         }
-        return targetNotReached;
+        return true;
     }
 
     public static void printImportantInfo(Individual[] population) {
         //print lowest, highest and average fitness
         //you can show the array by using Arrays.toString()
-        int lowestFitness = 11111111, highestFitness = 0, totalFitness = 0;
+        double lowestFitness = 11111111, highestFitness = 0, totalFitness = 0;
         double averageFitness = 0;
         for (Individual individual : population) {
             totalFitness += individual.getFitness();
@@ -74,42 +76,43 @@ public class SimpleGA {
             if (individual.getFitness() > highestFitness) {
                 highestFitness = individual.getFitness();
             }
+//            System.out.println(Arrays.toString(individual.getGenes()));
         }
 
         averageFitness = totalFitness / population.length;
 
-        System.out.println("Lowest Fitness: " + lowestFitness);
+//        System.out.println("Lowest Fitness: " + lowestFitness);
         System.out.println("Highest Fitness: " + highestFitness);
-        System.out.println("Average Fitness: " + averageFitness);
-        System.out.println("======================================");
+//        System.out.println("Average Fitness: " + averageFitness);
+//        System.out.println("======================================");
     }
 
     /*
     just to make things easier, I'll shove selection, crossover, mutation all in one!!!
      */
-    public static Individual[] selection_crossover_mutation(Individual[] population, double CROSSOVER_RATE, double MUTATION_RATE) {
+    public static Individual[] selection_crossover_mutation(Individual[] population) {
         Individual[] childrenPool = new Individual[population.length];
 
         for (int i = 0; i < childrenPool.length; i++) {
             //select 2 parents
-            Individual parent1 = selection(population);
-            Individual parent2 = selection(population);
-//            Individual parent1 = selectionRoulette(population);
-//            Individual parent2 = selectionRoulette(population);
+            Individual[] parents = new Individual[2];
+//            Individual parent1 = selection(population);
+//            Individual parent2 = selection(population);
+            parents[0] = selection(population);
+            parents[1] = selection(population);
 
             //crossover = create 2 children
-            Individual[] tempChildren = crossover(parent1, parent2, CROSSOVER_RATE);
-
-            //mutate the 2 children
-            mutation(tempChildren, MUTATION_RATE);
+            Individual[] tempChildren = crossover(parents[0], parents[1], CROSSOVER_RATE);
 
             //add children to the pool
             childrenPool[i] = tempChildren[0]; //add first child
-            i++;
-            if (i < childrenPool.length) {
+            if (i + 1 < childrenPool.length) {
+                i++;
                 childrenPool[i] = tempChildren[1]; //add second child (if there is space, if the population was odd there would be no space!)
             }
         }
+        //mutate
+        mutationAll(childrenPool, MUTATION_RATE);
         return childrenPool;
     }
 
@@ -123,6 +126,7 @@ public class SimpleGA {
             for (int j = 0; j < population[i].getGenes().length; j++) { //loop through each persons genes
                 population[i].setGeneFromIndex(j, rand.nextInt(2));
             }
+            population[i].setFitness(0);
         }
     }
 
@@ -135,44 +139,23 @@ public class SimpleGA {
     I will do both to show you
      */
     public static void fitnessFunction(Individual[] population) {
-        int totalFitness = 0;
-        
-        int highestFitnessIndex = 0;
+        double totalFitness = 0;
         for (int i = 0; i < population.length; i++) {
-            int newFitness = Arrays.stream(population[i].genes).sum();
-            totalFitness += newFitness;
-            if (population[i].getFitness() > population[highestFitnessIndex].getFitness()) {
-                highestFitnessIndex = i;
-            }
-//            //linear
-            population[i].setFitness(newFitness);
-
-//            //quadratic SLOW FOR SOME REASON....
-//            population[i].setFitness((int)Math.pow(newFitness, 2)); //quadratic
+            double newFitness = Arrays.stream(population[i].genes).sum();
+            
+//            newFitness = Math.pow(newFitness, 2);
+            population[i].setFitness(newFitness); //quadratic
         }
 
-        //exponential (in my bad code, it requires linear
-        //HAHAH EXPONENTIAL IS BREAKING MY CODE (PROBS TOO MUCH MEMORY USED!!!)
-//        double exponent = 0;
-//        for (int i = 0; i < population.length; i++) {
-//            exponent = (double)1+ ((double)population[i].getFitness() / (double)totalFitness); //so it will be e.g. 1.26 because...
-//            population[i].setFitness((int) Math.pow(2, exponent)); //... n^normalFitness would be MASSIVE
-//        }
-
-        //bias (make the one with the highest fitness higher chance to get...
-//        population[highestFitnessIndex].setFitness(population[highestFitnessIndex].getFitness() + 10);
-        
-        //heck you can even add a bias on a solution which is not the fittest --> as this will lead to diversity in the population!
-        double averageFitness = totalFitness/population.length;
-        double closestAverage = 100000000;
-        int closestAverageIndex = 0;
+        int maxFitnessIndex = 0;
+        double maxFitness = 0;
         for (int i = 0; i < population.length; i++) {
-            if(Math.abs(population[i].getFitness() - averageFitness) < closestAverage) {
-                closestAverage = population[i].getFitness();
-                closestAverageIndex = i;
+            if (population[i].getFitness() > maxFitness) {
+                maxFitness = population[i].getFitness();
+                maxFitnessIndex = i;
             }
         }
-//        population[closestAverageIndex].setFitness((int)closestAverage + 10);
+        population[maxFitnessIndex].setFitness(population[maxFitnessIndex].getFitness()*100);
     }
 
     /*
@@ -195,7 +178,16 @@ public class SimpleGA {
 
     /*
     This uses the roulette wheel to select a parent based on probability
-    */
+     */
+    public static double map(double numberInOldBounds, double oldRangeStart, double oldRangeEnd, double newRangeStart, double newRangeEnd) {
+        double output = 0;
+        //Y = (X-A)/(B-A) * (D-C) + C for mapping values in bounds
+        //might want to add checks in later to prevent div by 0
+        double scale = (numberInOldBounds-oldRangeStart)/(oldRangeEnd-oldRangeStart); //find what the slope/scale if
+        output = scale * (newRangeEnd-newRangeStart) + newRangeStart; //y=mx + b
+//        System.out.println("map " + numberInOldBounds + " --> " + output);
+        return output;
+    }
     public static Individual selectionRoulette(Individual[] population) {
 
         //work out total fitness
@@ -208,14 +200,15 @@ public class SimpleGA {
         double whereTheRouletteWheelStopped = Math.random();
         for (int i = 0; i < population.length; i++) {
             //keep subtracting till negative.. once this happens we know which person to stop on
-            double fitnessAsDouble = population[i].getFitness();
-            whereTheRouletteWheelStopped -= (double) (fitnessAsDouble / totalFitness);
-            if (whereTheRouletteWheelStopped <= 0) {
+            double fitnessProbability = map(population[i].getFitness(), 0, totalFitness, 0, 1);
+            whereTheRouletteWheelStopped -= fitnessProbability;
+            if (whereTheRouletteWheelStopped < 0) {
                 return population[i];
             }
         }
 
         //worst case return the first person
+        System.out.println("worst chance");
         return population[0];
     }
 
@@ -255,25 +248,29 @@ public class SimpleGA {
     This is mutation
     For binary, this is just bit flipping!
      */
-    public static void mutation(Individual[] population, double MUTATION_RATE) {
+    public static void mutationAll(Individual[] population, double MUTATION_RATE) {
         for (int i = 0; i < population.length; i++) {
-            for (int j = 0; j < population[i].getGenes().length; j++) {
+            population[i] = mutationSingle(population[i]);
+        }
+    }
+    private static Individual mutationSingle(Individual ind) {
+        Individual ret = ind;
+        for (int j = 0; j < ret.getGenes().length; j++) {
                 if (MUTATION_RATE > Math.random()) {
                     //bit flip
-                    population[i].setGeneFromIndex(
-                            j,
-                            population[i].getGeneFromIndex(j) ^ 1
-                    );
+                    int geneValue = ret.getGeneFromIndex(j);
+                    geneValue ^= 1;
+                    ret.setGeneFromIndex(j, geneValue);
                 }
             }
-        }
+        return ret;
     }
 
     /*Inner class cuz im lazy*/
     static class Individual {
 
         private int[] genes;
-        private int fitness;
+        private double fitness;
 
         public Individual(int numberOfGenes) {
             genes = new int[numberOfGenes];
@@ -297,11 +294,11 @@ public class SimpleGA {
             genes[i] = value;
         }
 
-        public int getFitness() {
+        public double getFitness() {
             return fitness;
         }
 
-        public void setFitness(int fitness) {
+        public void setFitness(double fitness) {
             this.fitness = fitness;
         }
 
