@@ -31,6 +31,7 @@ TODO:
 - try adding a conflict resolution (so if 2 genes match the same rule --> pick a gene which is "better" with most rules)
   - add an array in Rules to hold indices of genes which conflict
   - something to indicate which genes (of an individual) are being used on training and testing data
+- Conflict Resolution = first gene that matches, done! --> How larry suggested doing this.
 ------------------------------------------
 RESEARCH:
 - added research folder
