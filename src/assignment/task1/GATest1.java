@@ -18,7 +18,7 @@ public class GATest1 {
     private static final int POPULATION_SIZE = 10;
     private static final int CHROMOSOME_LENGTH = 7;
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
-    private static final double MUTATION_RATE = 0.1; // 1/popsize - 1/chromosome length
+    private static final double MUTATION_RATE = 0.01; // 1/popsize - 1/chromosome length
 
     public static void main(String[] args) {
 
@@ -75,7 +75,7 @@ public class GATest1 {
         scan = new Scanner(System.in);
         int i = 0;
         System.out.println("GENERATION: " + i);
-        while (stopCondition(population, trainingSet)) {
+        while (!stopCondition(population, trainingSet)) {
 
             FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
 //            FitnessFunction.convertFitnessQuadratic(population, 2);
@@ -85,7 +85,7 @@ public class GATest1 {
             
             population = generateOffSpring(trainingSet, population);
             i++;
-            scan.next(); //used to wait every generation
+//            scan.next(); //used to wait every generation
         }
 
     }
@@ -110,7 +110,7 @@ public class GATest1 {
                             correctConditions++;
                         }
                     }
-                    if (correctConditions == rule.getConditionLength() && rule.getOutput() == gene.getOutput()) {
+                    if (correctConditions >= rule.getConditionLength() && rule.getOutput() == gene.getOutput()) {
                         numberCorrect++;
                         break; //so we can test next gene
                     }
@@ -118,8 +118,8 @@ public class GATest1 {
             }
         }
 
-        if (numberCorrect == testingSet.length) return false;
-        else return true;
+        if (numberCorrect == testingSet.length) return true;
+        else return false;
     }
 
     /*

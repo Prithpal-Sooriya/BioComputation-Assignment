@@ -26,9 +26,11 @@ TODO:
 - inversion crossover = DONE
 - generic mutation function = DONE
 - output mutation function = DONE
-- fitness function that allows generics
-- try running test1.
-
+- fitness function that allows generics = DONE
+- try running test1. = FAILS
+- try adding a conflict resolution (so if 2 genes match the same rule --> pick a gene which is "better" with most rules)
+  - add an array in Rules to hold indices of genes which conflict
+  - something to indicate which genes (of an individual) are being used on training and testing data
 ------------------------------------------
 RESEARCH:
 - added research folder

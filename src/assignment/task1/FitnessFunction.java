@@ -68,9 +68,17 @@ public class FitnessFunction {
     //final version, we can use this to compare if all the rules in the genes in an individual are correct
     //This can be used near the end stages to see select individuals in the population who have complete sets
     //EDIT: NEEDED TO ACCOMODATE GENERIC CONDITIONS
-    public static Individual fitnessFunctionCompareRules(Rule[] trainingRuleset, Individual individual) {
+    public static void fitnessFunctionCompareRulesAll(Rule[] trainingRuleset, Individual[] population) {
+        for (int i = 0; i < population.length; i++) {
+            population[i].setFitness(0);
+            population[i] = fitnessFunctionCompareRulesSingle(trainingRuleset, population[i]);
+            
+        }
+    }
+    public static Individual fitnessFunctionCompareRulesSingle(Rule[] trainingRuleset, Individual individual) {
         double tempFitness = 0;
         int allCorrect = 0;
+//        double incorrectFitness = 0;
         //we will increment the fitness for each condition it gets correct
         for (int i = 0; i < individual.getGenesLength(); i++) { //loop through each gene
             for (Rule rule : trainingRuleset) {
@@ -82,9 +90,13 @@ public class FitnessFunction {
                         allCorrect++;
                     }
                 }
-                if (allCorrect == rule.getConditionLength()) {
+                
+                if (allCorrect >= rule.getConditionLength()) { //if a gene matches rule
                     tempFitness++;
                 }
+//                else {
+//                    incorrectFitness++;
+//                }
                 //at the end of each RULE we can div by length of rule?
                 //gives us a larger fitness if we just div at end?
 //                tempFitness /= rule.getConditionLength();
