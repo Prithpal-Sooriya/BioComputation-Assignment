@@ -38,17 +38,31 @@ public class FitnessFunction {
     }
     public static Individual fitnessFunctionCompareConditionsSingle(Rule[] trainingRuleset, Individual individual) {
 
+        individual.setFitness(0);
+        
         double tempFitness = 0;
+        double counter = 0;
+        
 
         //we will increment the fitness for each condition it gets correct
-        for (int i = 0; i < individual.getGenesLength(); i++) { //loop through each gene
-            for (Rule rule : trainingRuleset) {
+        for (Rule rule : trainingRuleset) { //loop through each rule
+            for (int i = 0; i < individual.getGenesLength(); i++) { //loop through each gene
+                counter = 0;
                 //compare each rule in the ruleset to the genes of the individual
                 for (int j = 0; j < rule.getConditionLength(); j++) { //loop through each condition
                     if (rule.getConditionValueFromIndex(j) == individual.getGeneFromIndex(i).getConditionValueFromIndex(j)
                             || individual.getGeneFromIndex(i).getConditionValueFromIndex(j) == 2) {
-                        tempFitness++;
+//                        tempFitness++;
+                        counter++;
                     }
+                }
+                if(rule.getOutput() == individual.getGeneFromIndex(i).getOutput()){
+                    counter++;
+                }
+//                tempFitness += counter/rule.getConditionLength();
+                if(counter == individual.getGeneFromIndex(i).getConditionLength()+1){
+                    tempFitness += counter; //only add if correct?
+                    break; //simple conflict resolution solution, pick first gene that matches rule.
                 }
                 //at the end of each RULE we can div by total rule?
                 //gives us a larger fitness if we just div at end?
@@ -57,8 +71,9 @@ public class FitnessFunction {
         }
 
         //now at the end, we can div by total number of conditions. (of all rules compared).
-        tempFitness /= (trainingRuleset.length * trainingRuleset[0].getConditionLength());
-
+        tempFitness = tempFitness / ((trainingRuleset.length * trainingRuleset[0].getConditionLength()+trainingRuleset.length));
+//        tempFitness /= trainingRuleset.length;
+//        System.out.println(tempFitness);
         individual.setFitness(tempFitness);
 
         //have to return back the individual, because the changes are not kept on an Object (pass by value)
@@ -79,9 +94,9 @@ public class FitnessFunction {
         double tempFitness = 0;
         int allCorrect = 0;
 //        double incorrectFitness = 0;
-        //we will increment the fitness for each condition it gets correct
-        for (int i = 0; i < individual.getGenesLength(); i++) { //loop through each gene
-            for (Rule rule : trainingRuleset) {
+        //we will increment the fitness for each condition it gets correct (Rule rule : trainingRuleset)
+        for (Rule rule : trainingRuleset) { //loop through each rule
+            for (int i = 0; i < individual.getGenesLength(); i++) { //loop through each gene
                 allCorrect = 0;
                 //compare each rule in the ruleset to the genes of the individual
                 for (int j = 0; j < rule.getConditionLength(); j++) { //loop through each condition
@@ -93,6 +108,7 @@ public class FitnessFunction {
                 
                 if (allCorrect >= rule.getConditionLength()) { //if a gene matches rule
                     tempFitness++;
+                    break; //we will now test the next rule (this will be so we can form a basic conflict resolution)
                 }
 //                else {
 //                    incorrectFitness++;
@@ -107,6 +123,11 @@ public class FitnessFunction {
         //so for this we can say an individual got e.g. 3/7 rules correct.
         tempFitness /= trainingRuleset.length;
 
+        //might want to add a check, in case the result is 0..
+        if(tempFitness == 0) {
+            tempFitness = 0.001; //dunno bout this...
+        }
+        
         individual.setFitness(tempFitness);
 
         //have to return back the individual, because the changes are not kept on an Object (pass by value)

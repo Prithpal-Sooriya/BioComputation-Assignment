@@ -18,7 +18,7 @@ public class GATest1 {
     private static final int POPULATION_SIZE = 10;
     private static final int CHROMOSOME_LENGTH = 7;
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
-    private static final double MUTATION_RATE = 0.01; // 1/popsize - 1/chromosome length
+    private static final double MUTATION_RATE = 0.001; // 1/popsize - 1/chromosome length
 
     public static void main(String[] args) {
 
@@ -127,10 +127,13 @@ public class GATest1 {
     used to show what is inside each individual
      */
     private static void showInformation(Individual[] population) {
+        double totalFitness = 0;
         for (Individual individual : population) {
-            System.out.println(individual.toString());
+//            System.out.println(individual.toString());
+            totalFitness+= individual.getFitness();
         }
-        System.out.println("============================");
+        System.out.println("average fitness: " + totalFitness/population.length);
+//        System.out.println("============================");
     }
 
     /*
@@ -144,8 +147,8 @@ public class GATest1 {
 
             //selection of parents
             Individual parents[] = new Individual[2];
-            parents[0] = Selection.FitnessProportionateSelection(population);
-            parents[1] = Selection.FitnessProportionateSelection(population);
+            parents[0] = Selection.tornamentSelection(population);
+            parents[1] = Selection.tornamentSelection(population);
 
             //crossover
             Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);

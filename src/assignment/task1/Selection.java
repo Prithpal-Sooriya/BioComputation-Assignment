@@ -28,7 +28,7 @@ public class Selection {
     }
 
     //roulette wheel
-    public static Individual FitnessProportionateSelection(Individual[] population) {
+    public static Individual fitnessProportionateSelection(Individual[] population) {
 
         //get the total fitness
         double totalFitness = 0;
