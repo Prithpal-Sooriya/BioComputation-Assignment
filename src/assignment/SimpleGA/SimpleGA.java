@@ -98,8 +98,8 @@ public class SimpleGA {
             Individual[] parents = new Individual[2];
 //            Individual parent1 = selection(population);
 //            Individual parent2 = selection(population);
-            parents[0] = selection(population);
-            parents[1] = selection(population);
+            parents[0] = selectionRoulette(population);
+            parents[1] = selectionRoulette(population);
 
             //crossover = create 2 children
             Individual[] tempChildren = crossover(parents[0], parents[1], CROSSOVER_RATE);

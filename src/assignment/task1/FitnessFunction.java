@@ -30,48 +30,79 @@ public class FitnessFunction {
         return (m * x) + c;
     }
 
+    public static void normalizeFitnessToTotal(Individual[] population) {
+        double totalFitness = 0.0;
+        double maxFitness = 0;
+        for (Individual individual : population) {
+            totalFitness += individual.getFitness();
+            if(individual.getFitness() > maxFitness){
+                maxFitness = individual.getFitness();
+            }
+        }
+
+        for (int i = 0; i < population.length; i++) {
+            population[i].setFitness(
+                    normalizeFitness(population[i].getFitness(), 0, totalFitness, 0, 1));
+//            double newFitness = (double) population[i].getFitness() / (double) totalFitness;
+//              System.out.println("nft total fit: " + totalFitness);
+//            population[i].setFitness(newFitness);
+//
+        }
+    }
+
     //EDIT: NEEDED TO ACCOMODATE GENERIC CONDITIONS
-    public static void fitnessFunctionCompareConditionsAll(Rule[] trainingRuleset, Individual[] population){
+    public static void fitnessFunctionCompareConditionsAll(Rule[] trainingRuleset, Individual[] population) {
         for (int i = 0; i < population.length; i++) {
             population[i] = fitnessFunctionCompareConditionsSingle(trainingRuleset, population[i]);
         }
     }
+
     public static Individual fitnessFunctionCompareConditionsSingle(Rule[] trainingRuleset, Individual individual) {
 
         individual.setFitness(0);
-        
+
+        double highestMatchingRate = 0;
+        double tempHighestMatchingRate = 0;
         double tempFitness = 0;
         double counter = 0;
-        
 
         //we will increment the fitness for each condition it gets correct
         for (Rule rule : trainingRuleset) { //loop through each rule
+            highestMatchingRate = 0;
             for (int i = 0; i < individual.getGenesLength(); i++) { //loop through each gene
                 counter = 0;
+                tempHighestMatchingRate = 0;
                 //compare each rule in the ruleset to the genes of the individual
                 for (int j = 0; j < rule.getConditionLength(); j++) { //loop through each condition
                     if (rule.getConditionValueFromIndex(j) == individual.getGeneFromIndex(i).getConditionValueFromIndex(j)
                             || individual.getGeneFromIndex(i).getConditionValueFromIndex(j) == 2) {
 //                        tempFitness++;
                         counter++;
+                        tempHighestMatchingRate++;
                     }
                 }
-                if(rule.getOutput() == individual.getGeneFromIndex(i).getOutput()){
+                if (rule.getOutput() == individual.getGeneFromIndex(i).getOutput()) {
                     counter++;
+                    tempHighestMatchingRate++;
                 }
 //                tempFitness += counter/rule.getConditionLength();
-                if(counter == individual.getGeneFromIndex(i).getConditionLength()+1){
-                    tempFitness += counter; //only add if correct?
+                if (counter == individual.getGeneFromIndex(i).getConditionLength() + 1) {
+//                    tempFitness += counter; //only add if correct?
                     break; //simple conflict resolution solution, pick first gene that matches rule.
+                } else {
+                    //pick the highest matching so far
+                    if (tempHighestMatchingRate > highestMatchingRate) {
+                        highestMatchingRate = tempHighestMatchingRate;
+                    }
                 }
                 //at the end of each RULE we can div by total rule?
                 //gives us a larger fitness if we just div at end?
 //                tempFitness /= rule.getConditionLength();
             }
+            tempFitness += highestMatchingRate/rule.getConditionLength();
         }
 
         //now at the end, we can div by total number of conditions. (of all rules compared).
-        tempFitness = tempFitness / ((trainingRuleset.length * trainingRuleset[0].getConditionLength()+trainingRuleset.length));
 //        tempFitness /= trainingRuleset.length;
 //        System.out.println(tempFitness);
         individual.setFitness(tempFitness);
@@ -87,9 +118,10 @@ public class FitnessFunction {
         for (int i = 0; i < population.length; i++) {
             population[i].setFitness(0);
             population[i] = fitnessFunctionCompareRulesSingle(trainingRuleset, population[i]);
-            
+
         }
     }
+
     public static Individual fitnessFunctionCompareRulesSingle(Rule[] trainingRuleset, Individual individual) {
         double tempFitness = 0;
         int allCorrect = 0;
@@ -105,7 +137,7 @@ public class FitnessFunction {
                         allCorrect++;
                     }
                 }
-                
+
                 if (allCorrect >= rule.getConditionLength()) { //if a gene matches rule
                     tempFitness++;
                     break; //we will now test the next rule (this will be so we can form a basic conflict resolution)
@@ -124,10 +156,10 @@ public class FitnessFunction {
         tempFitness /= trainingRuleset.length;
 
         //might want to add a check, in case the result is 0..
-        if(tempFitness == 0) {
+        if (tempFitness == 0) {
             tempFitness = 0.001; //dunno bout this...
         }
-        
+
         individual.setFitness(tempFitness);
 
         //have to return back the individual, because the changes are not kept on an Object (pass by value)
@@ -137,18 +169,30 @@ public class FitnessFunction {
     /*
     allows the fitness function to become quadratic, so to make individuals who match more, more relevent
      */
+    //need to fix
     public static void convertFitnessQuadratic(Individual[] population, int exponent) {
         //calculate total fitness
-        double totalFitness = 0;
-        for (Individual individual : population) {
-            totalFitness += individual.getFitness();
-        }
+//        double totalFitness = 0;
+//        for (Individual individual : population) {
+//            totalFitness += individual.getFitness();
+//        }
 
         for (int i = 0; i < population.length; i++) {
-            double newFitness = Math.pow(population[i].getFitness(), exponent);
-            newFitness = normalizeFitness(newFitness, 0, totalFitness, 0, 1);
+            //NORMALISE IF NOT NORMALISED THEN INFINITY
+            
+            //if normailise, we need to invert the fitness and then quadratic it --> then invert back.
+            double newFitness = population[i].getFitness();
+            System.out.println(newFitness);
+            newFitness = Math.pow(2, newFitness);
+//            System.out.println(newFitness);
+//            newFitness = normalizeFitness(newFitness, 0, totalFitness, 0, 1);
             population[i].setFitness(newFitness);
+//            System.out.println(newFitness);
         }
+        
+        //normalise the new fitness
+//        normalizeFitnessToTotal(population);
+        
     }
 
     /*
@@ -176,12 +220,13 @@ public class FitnessFunction {
         newFitness *= bias;
         totalFitness += newFitness; //add back to total
         population[maxFitnessIndex].setFitness(newFitness);
-        
+
         //re normalise the fitness for all population    
-        for (int i = 0; i < population.length; i++) {
-            newFitness = normalizeFitness(newFitness, 0, totalFitness, 0, 1);
-            population[i].setFitness(newFitness);
-        }
+//        for (int i = 0; i < population.length; i++) {
+//            newFitness = normalizeFitness(newFitness, 0, totalFitness, 0, 1);
+////            System.out.println("ff fit " + newFitness);
+//            population[i].setFitness(newFitness);
+//        }
     }
 
     /*

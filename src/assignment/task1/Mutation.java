@@ -58,9 +58,9 @@ public class Mutation {
         for (int i = 0; i < ind.getGenesLength(); i++) { //loop through genes
             newRule = ind.getGeneFromIndex(i);
             for (int j = 0; j < newRule.getConditionLength(); j++) { //loop through conditions
-                if (MUTATION_RATE > Math.random()) { //normal mutation
+                if (MUTATION_RATE >= Math.random()) { //normal mutation
                     //check if normal bitwise mutation or generic mutation
-                    if (MUTATION_RATE_GENERIC > Math.random()) {
+                    if (MUTATION_RATE_GENERIC >= Math.random()) {
                         newRule.setConditionValueFromIndex(j, 2);
                     } else { //generic mutation
                         /*
