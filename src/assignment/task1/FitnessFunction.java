@@ -5,10 +5,12 @@
  */
 package assignment.task1;
 
+import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -35,7 +37,7 @@ public class FitnessFunction {
         double maxFitness = 0;
         for (Individual individual : population) {
             totalFitness += individual.getFitness();
-            if(individual.getFitness() > maxFitness){
+            if (individual.getFitness() > maxFitness) {
                 maxFitness = individual.getFitness();
             }
         }
@@ -81,7 +83,7 @@ public class FitnessFunction {
                 if (rule.getOutput() == individual.getGeneFromIndex(i).getOutput()) {
                     counter++;
                 }
-                
+
                 /* CHECK HOW MUCH OF GENE IS CORRECT */
                 if (counter == individual.getGeneFromIndex(i).getConditionLength() + 1) {
                     highestMatchingRate = counter; //set the heighest so we can after FOR loop
@@ -92,15 +94,21 @@ public class FitnessFunction {
                         highestMatchingRate = counter;
                     }
                 }
-                
+
             } //end loop through gene
 //            System.out.println("match: " + highestMatchingRate);
             tempFitness += highestMatchingRate;
         } //end loop through whole genes.
-        
+
         //number correct TOTAL = 192 (rule condition + rule output * number of rules in training set)
         //(5+1) * 32 = 192.
-        tempFitness /= trainingRuleset.length; 
+        tempFitness = tempFitness / trainingRuleset.length;
+        if (Double.isNaN(tempFitness)) {
+            System.out.println("NAN");
+        }
+        if (!Double.isFinite(tempFitness)) {
+            System.out.println("Infinite");
+        }
 //        System.out.println("fitness: " + tempFitness);
         individual.setFitness(tempFitness);
 
@@ -166,19 +174,50 @@ public class FitnessFunction {
     /*
     allows the fitness function to become quadratic, so to make individuals who match more, more relevent
      */
-    //need to fix
+    // EDIT: FACING AN ISSUE WHEN SETTING AND GETTING THE FITNESS???
     public static void convertFitnessQuadratic(Individual[] population, int exponent) {
-        
+        Scanner scan = new Scanner(System.in);
+
+//        for (int i = 0; i < population.length; i++) {
+//            Individual ind = population[i];
+//            double tempFitness = ind.getFitness();
+//            tempFitness = ind.getFitness();
+//
+////            System.out.println("before " + i + ": " + tempFitness);
+////            scan.nextLine();
+//            tempFitness = tempFitness * 2;
+////            System.out.println("After " + i + ": " + tempFitness);
+////            scan.nextLine();
+//            ind.setTempFitness(tempFitness);
+//            population[i] = ind;
+//        }
+//
+//        //then set the values into original fitness at the end? mitigate this issue of object mismatch
+//        for (int i = 0; i < population.length; i++) {
+//            System.out.println("before " + i + ": " + population[i].getFitness());
+//            population[i].setFitness(population[i].getTempFitness());
+//            System.out.println("After " + i + ": " + population[i].getFitness());
+//            scan.nextLine();
+//
+//        }
+        //lets see if we split the function
         for (int i = 0; i < population.length; i++) {
             
-            //get the fitness
-            int currentFitness = (int)(population[i].getFitness()*100);
-            
-            
-            double exponentFitness = currentFitness*currentFitness;
-//            System.out.println(exponentFitness);
-            population[i].setFitness(exponentFitness); //set the new fitness
+            System.out.println("before " + i + ": " + population[i].getFitness());
+            System.out.println(population[i].hashCode());
+            population[i] = convertFitnessQuadraticSingle(population[i], exponent);
+            System.out.println("After " + i + ": " + population[i].getFitness());
+            System.out.println(population[i].hashCode());
+            scan.nextLine();
         }
+
+    }
+
+    public static Individual convertFitnessQuadraticSingle(Individual individual, int exponent) {
+        double tempFitness = individual.getFitness();
+        tempFitness *= 2;
+        individual.setFitness(tempFitness);
+        return individual;
     }
 
     /*

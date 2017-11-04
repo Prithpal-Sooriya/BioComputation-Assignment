@@ -18,7 +18,7 @@ public class GATest1 {
     private static final int POPULATION_SIZE = 10;
     private static final int CHROMOSOME_LENGTH = 7; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
-    private static final double MUTATION_RATE = 0.02; // 1/popsize - 1/chromosome length (or DNA length)
+    private static final double MUTATION_RATE = 0.1; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
 
@@ -74,17 +74,33 @@ public class GATest1 {
         /* Loop through each generation */
         scan = new Scanner(System.in);
         int i = 0;
-        while (!stopCondition(population, trainingSet)) {
+        boolean stop = true;
+        while (stop) {
+            
+            /* reset the fitness just to be safe... */
+            for (int j = 0; j < population.length; j++) {
+                population[i].setFitness(0);
+            }
 
+            /* evaulate fitness */
             FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
-//            FitnessFunction.normalizeFitnessToTotal(population);
-//            FitnessFunction.convertFitnessQuadratic(population, 2);
+            
+            /* evaluate stop condition */
+            stop = !stopCondition(population, trainingSet);
+            if(stop == false) {
+                break;
+            }
+            
+            /* other fitness evaluations */
+            FitnessFunction.convertFitnessQuadratic(population, 2);
 //            FitnessFunction.convertFitnessQuadratic(population, 2);
 //            FitnessFunction.addFitnessBiasToHighest(population, 1);
 //            FitnessFunction.normalizeFitnessToTotal(population);
             showInformation(population);
 
-            population = generateOffSpring(trainingSet, population);
+            /* Create new generation */
+            Individual[] offSpring = generateOffSpring(trainingSet, population);
+//            population = Arrays.copyOf(offSpring, offSpring.length);
             i++;
 //            scan.next(); //used to wait every generation
         }

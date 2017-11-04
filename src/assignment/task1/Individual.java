@@ -16,6 +16,7 @@ public class Individual {
 
     private Rule genes[];
     private double fitness;
+    private double tempFitness; //mitigate the array setter getter mismatch
 
     public Individual(int numberOfGenes, int sizeOfCondition) {
 
@@ -40,6 +41,15 @@ public class Individual {
     
     /*Setters and Getters*/
 
+    public double getTempFitness() {
+        return tempFitness;
+    }
+
+    public void setTempFitness(double tempFitness) {
+        this.tempFitness = tempFitness;
+    }
+    
+    
     public Rule[] getGenes() {
         return genes;
     }
@@ -102,14 +112,12 @@ public class Individual {
     @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
-
         //rules
         for (int i = 0; i < genes.length; i++) {
             ret.append(genes[i].toString());
         }
         //fitness
         ret.append("Fitness = ").append(fitness);
-        System.out.println("fitness = " + fitness);
 
         return ret.toString();
 
