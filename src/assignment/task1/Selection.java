@@ -30,21 +30,7 @@ public class Selection {
     //roulette wheel
     public static Individual fitnessProportionateSelection(Individual[] population) {
 
-        //get the total fitness
-        double totalFitness = 0;
-        for (Individual individual : population) {
-            totalFitness += individual.getFitness();
-        }
-
-        //we will normalise all the population's fitness between 1 & 0
-        //makes it easier to understand
-        for (int i = 0; i < population.length; i++) {
-            population[i].setFitness(
-                    FitnessFunction.normalizeFitness(
-                            population[i].getFitness(), 0, totalFitness, 0, 1)
-            );
-
-        }
+        FitnessFunction.normalizeFitnessToTotal(population);
 
         //and from this, we will do roulette wheel
         double rouletteStop = Math.random();

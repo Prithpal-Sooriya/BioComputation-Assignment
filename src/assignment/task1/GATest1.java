@@ -16,9 +16,9 @@ import java.util.Scanner;
 public class GATest1 {
 
     private static final int POPULATION_SIZE = 10;
-    private static final int CHROMOSOME_LENGTH = 7;
+    private static final int CHROMOSOME_LENGTH = 7; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
-    private static final double MUTATION_RATE = 0.1; // 1/popsize - 1/chromosome length
+    private static final double MUTATION_RATE = 0.02; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
 
@@ -74,16 +74,15 @@ public class GATest1 {
         /* Loop through each generation */
         scan = new Scanner(System.in);
         int i = 0;
-        System.out.println("GENERATION: " + i);
         while (!stopCondition(population, trainingSet)) {
 
             FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
-            
+//            FitnessFunction.normalizeFitnessToTotal(population);
+//            FitnessFunction.convertFitnessQuadratic(population, 2);
 //            FitnessFunction.convertFitnessQuadratic(population, 2);
 //            FitnessFunction.addFitnessBiasToHighest(population, 1);
 //            FitnessFunction.normalizeFitnessToTotal(population);
             showInformation(population);
-            
 
             population = generateOffSpring(trainingSet, population);
             i++;
@@ -97,27 +96,33 @@ public class GATest1 {
     For this to pass, 1 INDIVIDUAL MUST MEET ALL OF THE TEST DATA, not the population as a whole :/
     NEED TO FIX.
      */
+    //tidy up the stop condition
+    private static int stopConditionSingle(Rule rule, Individual individual) {
+
+        //check if any of the genes matches the rule
+        for (Rule gene : individual.getGenes()) {
+            if (rule.compareTo(gene) == 0) {
+                return 1; //the rule does match to a gene!
+            }
+        }
+
+        return 0; //all does not match.
+    }
+
     private static boolean stopCondition(Individual[] population, Rule[] testingSet) {
         //loop through each individual and keep a counter, if that individual passes all test then return true!
         int numberCorrect = 0;
         int correctConditions = 0;
-        for (Individual individual : population) { //for each person...
+
+        //loop through each person
+        for (Individual individual : population) {
             numberCorrect = 0;
-            for (Rule gene : individual.getGenes()) { //their genes
-                for (Rule rule : testingSet) { //test data
-                    correctConditions = 0;
-                    for (int i = 0; i < gene.getConditionLength(); i++) { //each bit for condition
-                        if (rule.getConditionValueFromIndex(i) == gene.getConditionValueFromIndex(i)
-                                || gene.getConditionValueFromIndex(i) == 2) {
-                            correctConditions++;
-                        }
-                    }
-                    if (correctConditions >= rule.getConditionLength() && rule.getOutput() == gene.getOutput()) {
-                        numberCorrect++;
-                        break; //so we can test next gene
-                    }
-                }
+            //loop through each rule
+            for (Rule rule : testingSet) {
+                numberCorrect += stopConditionSingle(rule, individual);
             }
+            
+            //check if that person matches all the rules
             if (numberCorrect == testingSet.length) {
                 System.out.println("=================================");
                 System.out.println("Correct Individual from population:");
@@ -125,8 +130,7 @@ public class GATest1 {
                 return true;
             }
         }
-
-        return false; //could not find a member of population which solves test set.
+        return false; //could not find a member of population which solves whole test set.
     }
 
     /*
@@ -136,6 +140,7 @@ public class GATest1 {
     private static void showInformation(Individual[] population) {
         double totalFitness = 0.0;
         for (Individual individual : population) {
+//            System.out.println(individual.getFitness());
 //            System.out.println(individual.toString());
             totalFitness += (double) individual.getFitness();
         }

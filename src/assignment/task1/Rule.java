@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author Prithpal Sooriya
  */
-public class Rule {
+public class Rule implements Comparable<Rule>{
 
     private static final double EXTREME_MUTATION_RATE_OUTPUT = 0.7;
 
@@ -90,6 +90,36 @@ public class Rule {
     @Override
     public String toString() {
         return "" + Arrays.toString(condition) + "," + output + "\n";
+    }
+
+    //this will return 0 if the rule matches, and -1 if it doesnt
+    @Override
+    public int compareTo(Rule rule) {
+        //check if the condition lengths match and output length matches
+        if(condition.length != rule.getConditionLength()) {
+            return -1;
+        }
+        if(getOutputLength() != rule.getOutputLength()) {
+            return -1;
+        }
+        
+        int match = 0;
+        for (int i = 0; i < condition.length; i++) {
+            if(condition[i] == rule.getConditionValueFromIndex(i) || rule.getConditionValueFromIndex(i) == 2) {
+                //they match
+                match++;
+            }
+        }
+        if(output == rule.getOutput()) {
+            match++;
+        }
+        
+        if(match == condition.length + getOutputLength()) {
+            return 0; //they completely match
+        }
+        
+        return -1; //they did not match;
+        
     }
 
 }

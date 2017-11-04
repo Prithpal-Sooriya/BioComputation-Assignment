@@ -79,7 +79,6 @@ public class Individual {
             //set new output
             genes[i].setOutput(array[arrayIndex]);
             arrayIndex++;
-            
         }
     }
 
@@ -109,10 +108,11 @@ public class Individual {
             ret.append(genes[i].toString());
         }
         //fitness
-        ret.append("Fitness = " + fitness);
+        ret.append("Fitness = ").append(fitness);
+        System.out.println("fitness = " + fitness);
 
         return ret.toString();
 
     }
-
+    
 }
