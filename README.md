@@ -21,6 +21,8 @@
 - NOTE: consider this when looking at test3.txt
   - http://www.obitko.com/tutorials/genetic-algorithms/crossover-mutation.php
 
+- Expected output --> individual with least generic rules first, and more generic rules near the end
+
 ------------------------------------------
 TODO:
 - inversion crossover = DONE
@@ -32,6 +34,7 @@ TODO:
   - add an array in Rules to hold indices of genes which conflict
   - something to indicate which genes (of an individual) are being used on training and testing data
 - Conflict Resolution = first gene that matches, DONE! --> How larry suggested doing this.
+- Generics --> how much generics should I include --> how to create an individual with first rules not as generic, and last rules more generic.
 ------------------------------------------
 RESEARCH:
 - added research folder

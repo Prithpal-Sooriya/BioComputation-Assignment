@@ -1,0 +1,26 @@
+https://en.wikipedia.org/wiki/Schema_(genetic_algorithms)
+
+Schema = the way the chromosome is represented
+- Binary chromosome = 100*01
+- Wild cards = generics (so for binary chromosome, a wild card can be a 1 or a 0)
+- The order of a schema is defined as the number of fixed positions in the template
+  - So there needs to be some fixed positions in the chromosomes (you cannot have all wild cards)
+- Defining length = the distance/length between the first and last fixed positions.
+
+Length of schema
+- defines the total number of nodes in a schema
+- also equal to the number of nodes in the program matching schema
+
+Disruption of schema
+- when a parent matches a schema but its child does not match the schema
+
+Propagation of schema
+- when a schema is passed on from one generation to the next.
+
+Expansion and compression of a schema
+- what a schema requires
+  - alphabet (all the characters, rules, etc, that a schema can use)
+  - length of all words over the alphabet
+  - what the wildcard can represent in the alphabet (maybe you only want the wild card to represent some numbers in the alphabet)
+  - length of all wildcard words over the wildcard alphabet.
+  - empty schema
