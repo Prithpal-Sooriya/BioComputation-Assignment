@@ -18,7 +18,7 @@ public class GATest1 {
     private static final int POPULATION_SIZE = 10;
     private static final int CHROMOSOME_LENGTH = 7; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
-    private static final double MUTATION_RATE = 0.1; // 1/popsize - 1/chromosome length (or DNA length)
+    private static final double MUTATION_RATE = 0.238; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
 
@@ -85,7 +85,7 @@ public class GATest1 {
             /* evaulate fitness */
             FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
             
-            showInformation(population);
+//            showInformation(population);
             
             /* evaluate stop condition */
             stop = !stopCondition(population, trainingSet);
@@ -95,7 +95,7 @@ public class GATest1 {
             
             /* other fitness evaluations */
 //            FitnessFunction.convertFitnessQuadratic(population, 2);
-            FitnessFunction.convertFitnessExponential(population, 2);
+            FitnessFunction.convertFitnessQuadratic(population, 2);
             FitnessFunction.addFitnessBiasToHighest(population, 10); //bias is a multiplication (maybe we should change this into an addition)
 //            FitnessFunction.normalizeFitnessToTotal(population);
             
@@ -181,8 +181,8 @@ public class GATest1 {
 
             //selection of parents
             Individual parents[] = new Individual[2];
-            parents[0] = Selection.tornamentSelection(population);
-            parents[1] = Selection.tornamentSelection(population);
+            parents[0] = Selection.fitnessProportionateSelection(population);
+            parents[1] = Selection.fitnessProportionateSelection(population);
 
             //crossover
             Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
