@@ -200,22 +200,41 @@ public class FitnessFunction {
 //            scan.nextLine();
 //
 //        }
+
         //lets see if we split the function
         for (int i = 0; i < population.length; i++) {
             
-            System.out.println("before " + i + ": " + population[i].getFitness());
-            System.out.println(population[i].hashCode());
+//            System.out.println("before " + i + ": " + population[i].getFitness());
+//            System.out.println(population[i].hashCode());
             population[i] = convertFitnessQuadraticSingle(population[i], exponent);
-            System.out.println("After " + i + ": " + population[i].getFitness());
-            System.out.println(population[i].hashCode());
-            scan.nextLine();
+//            System.out.println("After " + i + ": " + population[i].getFitness());
+//            System.out.println(population[i].hashCode());
+//            scan.nextLine();
         }
 
     }
 
     public static Individual convertFitnessQuadraticSingle(Individual individual, int exponent) {
         double tempFitness = individual.getFitness();
-        tempFitness *= 2;
+        tempFitness = Math.pow(tempFitness, 2); 
+        individual.setFitness(tempFitness);
+        return individual;
+    }
+    
+     public static void convertFitnessExponential(Individual[] population, int exponent) {
+         for (int i = 0; i < population.length; i++) {
+            
+//            System.out.println("before " + i + ": " + population[i].getFitness());
+//            System.out.println(population[i].hashCode());
+            population[i] = convertFitnessExponentSingle(population[i], exponent);
+//            System.out.println("After " + i + ": " + population[i].getFitness());
+//            System.out.println(population[i].hashCode());
+//            scan.nextLine();
+        }
+     }
+     public static Individual convertFitnessExponentSingle(Individual individual, int exponent) {
+        double tempFitness = individual.getFitness();
+        tempFitness = Math.pow(2, tempFitness); 
         individual.setFitness(tempFitness);
         return individual;
     }
@@ -241,9 +260,9 @@ public class FitnessFunction {
 
         //create the bias
         double newFitness = population[maxFitnessIndex].getFitness();
-        totalFitness -= newFitness; //remove it from the total
+        totalFitness -= newFitness; //remove it from the total (used for if we want to use total fitness again...)
         newFitness *= bias;
-        totalFitness += newFitness; //add back to total
+        totalFitness += newFitness; //add back to total (used for if we want to use total fitness again...)
         population[maxFitnessIndex].setFitness(newFitness);
 
         //re normalise the fitness for all population    

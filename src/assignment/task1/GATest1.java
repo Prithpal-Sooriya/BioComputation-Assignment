@@ -73,17 +73,19 @@ public class GATest1 {
 
         /* Loop through each generation */
         scan = new Scanner(System.in);
-        int i = 0;
+        long i = 0;
         boolean stop = true;
         while (stop) {
             
             /* reset the fitness just to be safe... */
             for (int j = 0; j < population.length; j++) {
-                population[i].setFitness(0);
+                population[j].setFitness(0);
             }
 
             /* evaulate fitness */
             FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
+            
+            showInformation(population);
             
             /* evaluate stop condition */
             stop = !stopCondition(population, trainingSet);
@@ -92,18 +94,21 @@ public class GATest1 {
             }
             
             /* other fitness evaluations */
-            FitnessFunction.convertFitnessQuadratic(population, 2);
 //            FitnessFunction.convertFitnessQuadratic(population, 2);
-//            FitnessFunction.addFitnessBiasToHighest(population, 1);
+            FitnessFunction.convertFitnessExponential(population, 2);
+            FitnessFunction.addFitnessBiasToHighest(population, 10); //bias is a multiplication (maybe we should change this into an addition)
 //            FitnessFunction.normalizeFitnessToTotal(population);
-            showInformation(population);
+            
 
             /* Create new generation */
-            Individual[] offSpring = generateOffSpring(trainingSet, population);
+            generateOffSpring(trainingSet, population);
 //            population = Arrays.copyOf(offSpring, offSpring.length);
             i++;
 //            scan.next(); //used to wait every generation
         }
+        
+        System.out.println("NUMBER OF GENERATIONS: " + i);
+        
 
     }
 
@@ -169,15 +174,15 @@ public class GATest1 {
     Generate offspring
     includes selection, crossover, and mutation
      */
-    private static Individual[] generateOffSpring(Rule[] trainingSet, Individual[] population) {
+    private static void generateOffSpring(Rule[] trainingSet, Individual[] population) {
         Individual offspring[] = new Individual[population.length];
 
         for (int i = 0; i < offspring.length; i++) {
 
             //selection of parents
             Individual parents[] = new Individual[2];
-            parents[0] = Selection.fitnessProportionateSelection(population);
-            parents[1] = Selection.fitnessProportionateSelection(population);
+            parents[0] = Selection.tornamentSelection(population);
+            parents[1] = Selection.tornamentSelection(population);
 
             //crossover
             Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
@@ -195,7 +200,16 @@ public class GATest1 {
             offspring[i] = Mutation.mutationGenerics(offspring[i], MUTATION_RATE);
         }
 
-        return offspring;
+        //lets copy to the population individually, this might be the cause of the object referencing being the same!!!
+        //FIXED
+        for (int i = 0; i < offspring.length; i++) {
+            
+            //copy genes
+            for (int j = 0; j < offspring[i].getGenesLength(); j++) {
+                population[i].setGeneFromIndex(j, offspring[i].getGeneFromIndex(j));
+            }
+            
+        }
     }
 
 }
