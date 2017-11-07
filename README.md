@@ -24,7 +24,7 @@
 - Expected output --> individual with least generic rules first, and more generic rules near the end
 
 ------------------------------------------
-TODO:
+TODO COMPLETE:
 - inversion crossover = DONE
 - generic mutation function = DONE
 - output mutation function = DONE
@@ -34,7 +34,26 @@ TODO:
   - add an array in Rules to hold indices of genes which conflict
   - something to indicate which genes (of an individual) are being used on training and testing data
 - Conflict Resolution = first gene that matches, DONE! --> How larry suggested doing this.
+
+TODO NOT DONE:
+
 - Generics --> how much generics should I include --> how to create an individual with first rules not as generic, and last rules more generic.
+  - Make sure a rule's condition is not all made up of genetics
+- add in inversion crossover (where we swap places of rules)
+- Add in sorting population by fitness
+  - Add in the subset of best parents swap for subset of worst children.
+- Add in weights
+  - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
+- Task 3 Data analysis
+  - clean data/reduce data
+  - dimensional reduction
+- Task 3 Genotype
+  - bounds array? (2.563<=x<=2.836) --> Larry said do this.
+    - mutation = change bounds a small amount higher or lower
+    - crossover = swap bounds
+  - doubles array? (2.633)
+    - mutation = change the values a small amount higher or lower
+    - crossover = ?
 ------------------------------------------
 RESEARCH:
 - added research folder
