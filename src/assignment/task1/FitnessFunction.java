@@ -8,6 +8,9 @@ package assignment.task1;
 import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -20,6 +23,27 @@ import java.util.Set;
 public class FitnessFunction {
 
     private FitnessFunction() {
+    }
+    
+    /*
+    Sorting a population by their fitness
+    This will be used so we can replace less fit new population with more fit old
+    population
+    */
+    public static void sortPopulationByFitness(Individual[] population) {
+        Arrays.sort(population, new Comparator<Individual>(){
+            @Override
+            public int compare(Individual o1, Individual o2) {
+                double result = o1.getFitness() - o2.getFitness();
+                if(result > 0){
+                    return 1;
+                }
+                if(result < 0) {
+                    return -1;
+                }
+                return 0; //they were equal
+            }
+        });
     }
 
     //so we can map the fitness to a range which is easier to use --> for example 0-1
