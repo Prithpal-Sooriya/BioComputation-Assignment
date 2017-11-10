@@ -16,14 +16,14 @@ import java.util.Scanner;
 public class GATest1 {
 
     private static final int POPULATION_SIZE = 25;
-    private static final int CHROMOSOME_LENGTH = 64; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
+    private static final int CHROMOSOME_LENGTH = 32; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
-    private static final double MUTATION_RATE = 0.02; // 1/popsize - 1/chromosome length (or DNA length)
+    private static final double MUTATION_RATE = 0.04; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
 
         /*read in the file: SUCCESS*/
-        Scanner scan = new Scanner(GATest1.class.getResourceAsStream("/Files/data1.txt"));
+        Scanner scan = new Scanner(GATest1.class.getResourceAsStream("/Files/data2.txt"));
 //        //check if it works
 //        while(scan.hasNextLine()){
 //            System.out.println(scan.nextLine());
@@ -134,7 +134,6 @@ public class GATest1 {
 //                return 1; //the rule does match to a gene!
 //            }
         }
-
         return 0; //none match 
     }
 
@@ -152,7 +151,7 @@ public class GATest1 {
             }
 
             //check if that person matches all the rules
-            if (numberCorrect == testingSet.length) {
+            if (numberCorrect >= testingSet.length) {
                 System.out.println("=================================");
                 System.out.println("Correct Individual from population:");
                 //recalculate the individuals fitness
@@ -236,7 +235,7 @@ public class GATest1 {
         
         //add parentpop[N-offset] to parentpop[N] to beginning of offspring
         for (int i = 0; i < offset; i++) {
-            int parentIndex = parentPopulation.length - 1 - offset + i;
+            int parentIndex = parentPopulation.length - offset + i;
             offspring[i] = parentPopulation[parentIndex];
         }
         
@@ -247,7 +246,6 @@ public class GATest1 {
             for (int j = 0; j < offspring[i].getGenesLength(); j++) {
                 population[i].setGeneFromIndex(j, offspring[i].getGeneFromIndex(j));
             }
-
         }
         
     }

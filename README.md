@@ -37,9 +37,11 @@ TODO COMPLETE:
 
 TODO NOT DONE:
 
+- FIX FITNESS FUNCTION AND STOP CONDITION, AND CHECK SUBARRAY SWAP
+
 - Generics --> how much generics should I include --> how to create an individual with first rules not as generic, and last rules more generic.
   - Make sure a rule's condition is not all made up of genetics = DONE
-  
+
 - add in inversion crossover (where we swap places of rules)
 
 - Add in sorting population by fitness

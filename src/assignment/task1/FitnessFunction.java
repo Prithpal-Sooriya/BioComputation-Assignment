@@ -122,8 +122,8 @@ public class FitnessFunction {
 
             } //end loop through gene
 //            System.out.println("match: " + highestMatchingRate);
-//            tempFitness += highestMatchingRate/(rule.getConditionLength()+1);
-              tempFitness += highestMatchingRate;
+            tempFitness += highestMatchingRate/(rule.getConditionLength()+1);
+//              tempFitness += highestMatchingRate;
         } //end loop through whole genes.
 
         //number correct TOTAL = 192 (rule condition + rule output * number of rules in training set)
@@ -350,7 +350,7 @@ public class FitnessFunction {
         //create the bias
         double newFitness = population[maxFitnessIndex].getFitness();
         totalFitness -= newFitness; //remove it from the total (used for if we want to use total fitness again...)
-        newFitness *= bias;
+        newFitness += bias;
         totalFitness += newFitness; //add back to total (used for if we want to use total fitness again...)
         population[maxFitnessIndex].setFitness(newFitness);
 

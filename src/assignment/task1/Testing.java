@@ -80,6 +80,16 @@ public class Testing {
         System.out.println("=============after=============");
         showEachFitness(population);
         
+        /* Create Initial population */
+        Individual population2[] = new Individual[POPULATION_SIZE];
+        //init population (which will randomise the genes
+        for (int i = 0; i < population2.length; i++) {
+            population2[i] = new Individual(CHROMOSOME_LENGTH, rulesAL.get(0).getConditionLength());
+        }
+        FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population2);
+        FitnessFunction.sortPopulationByFitness(population2);
+        
+        //perform swap (will try later)
     }
     
     private static void showEachFitness(Individual[] population) {
