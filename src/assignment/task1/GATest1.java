@@ -15,7 +15,7 @@ import java.util.Scanner;
  */
 public class GATest1 {
 
-    private static final int POPULATION_SIZE = 10;
+    private static final int POPULATION_SIZE = 20;
     private static final int CHROMOSOME_LENGTH = 16; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
     private static final double MUTATION_RATE = 0.0238; // 1/popsize - 1/chromosome length (or DNA length)

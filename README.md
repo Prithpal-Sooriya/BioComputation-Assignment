@@ -38,19 +38,25 @@ TODO COMPLETE:
 TODO NOT DONE:
 
 - Generics --> how much generics should I include --> how to create an individual with first rules not as generic, and last rules more generic.
-  - Make sure a rule's condition is not all made up of genetics
+  - Make sure a rule's condition is not all made up of genetics = DONE
+  
 - add in inversion crossover (where we swap places of rules)
+
 - Add in sorting population by fitness
   - Add in the subset of best parents swap for subset of worst children.
+
 - Add in weights
   - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
+
 - Task 3 Data analysis
   - clean data/reduce data
   - dimensional reduction
+
 - Task 3 Genotype
   - bounds array? (2.563<=x<=2.836) --> Larry said do this.
     - mutation = change bounds a small amount higher or lower
     - crossover = swap bounds
+
   - doubles array? (2.633)
     - mutation = change the values a small amount higher or lower
     - crossover = ?
