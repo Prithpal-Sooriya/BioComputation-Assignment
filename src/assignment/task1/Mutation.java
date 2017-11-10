@@ -5,6 +5,9 @@
  */
 package assignment.task1;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -77,24 +80,108 @@ public class Mutation {
                     }
                 }
             }
-            if(MUTATION_RATE > Math.random()) {
-                newRule.setOutput(newRule.getOutput()^1);
+            if (MUTATION_RATE > Math.random()) {
+                newRule.setOutput(newRule.getOutput() ^ 1);
             }
+
+            //forgot to set the new gene back to the individual :P
+            ind.setGeneFromIndex(i, newRule);
+
         }
-        
+
         return ind;
+    }
+
+    /*
+    The upper mutation generics might be seen as flawed
+        - as we first check if a mutation has occured, and then check if we should do a generic mutation
+        - this will be multiplication of mutation_rate an mutation_rate_generic
+            - e.g. 0.5 * 0.25 = 0.125
+                - meaning a very small chance for generic mutation!!
+    
+    This version will hopefully solve that (as well as the allowing not all the condition to be generic --> no 22222)
+    
+     */
+    public static Individual mutationGenericsV2(Individual ind, double MUTATION_RATE) {
+
+        //var to hold how many generics are in a gene
+        int numberOfGenerics = 0;
+        
+        //Random number generator
+        Random rand = new Random();
+        
+
+        //loop through each gene for an individual
+        for (int i = 0; i < ind.getGenes().length; i++) {
+            Rule newRule = ind.getGeneFromIndex(i);
+            
+            //now do mutations on condition
+            for (int j = 0; j < newRule.getConditionLength(); j++) {
+
+                if (MUTATION_RATE >= Math.random()) {
+
+                    /*
+                        generic muation!
+                    
+                        options:
+                        if(bit = 0) -> new val = 1 or 2
+                        if(bit = 1) -> new val = 0 or 2
+                        if(bit = 2) -> new val = 0 or 1
+                        
+                        This is a bit of a hacky shortcut, because I don't want the multiple if's
+                     */
+                    Integer[] valsTemp = {0, 1, 2};
+                    ArrayList<Integer> vals = new ArrayList<>(Arrays.asList(valsTemp));
+                    if (newRule.getConditionValueFromIndex(j) == 3) {
+                        System.out.println("condition == 3");
+                    }
+                    vals.remove(newRule.getConditionValueFromIndex(j));
+                    newRule.setConditionValueFromIndex(j, vals.get(rand.nextInt(2))); //Pick a random index from the remaining 2 items in list
+
+                }
+            }
+
+            //now that we have done the mutation for the whole condition,
+            //check how many generics are in the rule (we do not want all generics...)
+            numberOfGenerics = 0;
+            for (int conditionBit : newRule.getCondition()) {
+                if (conditionBit == 2) {
+                    numberOfGenerics++;
+                }
+            }
+            
+            //if they are all generics, lets just pick a random bit condition, and mutate back to binary
+            if(numberOfGenerics == newRule.getConditionLength()){
+                newRule.setConditionValueFromIndex(rand.nextInt(newRule.getConditionLength()), rand.nextInt(2));
+            }
+            
+            
+            //do mutations on output
+            if (MUTATION_RATE >= Math.random()) {
+                //bitflip only on output
+                newRule.setOutput(newRule.getOutput() ^ 1);
+            }
+
+
+            //set the newrule back into gene position
+            ind.setGeneFromIndex(i, newRule);
+
+        }
+
+        return ind;
+
     }
 
     /*
     Maybe might do a more complex mutation
     For example, if the conditions for a rule are correct but the output is incorrect,
     I could give the output exclusively a higher mutation rate?
-    */
+     */
     public static Rule mutationOutput(Rule rule, double MUTATION_RATE_OUTPUT) {
-        if(MUTATION_RATE_OUTPUT > Math.random()) {
-            rule.setOutput(rule.getOutput()^1);
+        if (MUTATION_RATE_OUTPUT > Math.random()) {
+            rule.setOutput(rule.getOutput() ^ 1);
         }
         return rule;
     }
-    
+
 }

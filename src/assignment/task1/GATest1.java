@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class GATest1 {
 
     private static final int POPULATION_SIZE = 10;
-    private static final int CHROMOSOME_LENGTH = 7; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
+    private static final int CHROMOSOME_LENGTH = 16; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
     private static final double MUTATION_RATE = 0.0238; // 1/popsize - 1/chromosome length (or DNA length)
 
@@ -197,7 +197,7 @@ public class GATest1 {
 
         //mutation --> place this for loop in the mutation function.
         for (int i = 0; i < offspring.length; i++) {
-            offspring[i] = Mutation.mutationGenerics(offspring[i], MUTATION_RATE);
+            offspring[i] = Mutation.mutationGenericsV2(offspring[i], MUTATION_RATE);
         }
 
         //lets copy to the population individually, this might be the cause of the object referencing being the same!!!
