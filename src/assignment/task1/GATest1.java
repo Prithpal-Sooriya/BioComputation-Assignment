@@ -16,14 +16,14 @@ import java.util.Scanner;
 public class GATest1 {
 
     private static final int POPULATION_SIZE = 25;
-    private static final int CHROMOSOME_LENGTH = 32; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
+    private static final int CHROMOSOME_LENGTH = 64; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
     private static final double MUTATION_RATE = 0.02; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
 
         /*read in the file: SUCCESS*/
-        Scanner scan = new Scanner(GATest1.class.getResourceAsStream("/Files/data2.txt"));
+        Scanner scan = new Scanner(GATest1.class.getResourceAsStream("/Files/data1.txt"));
 //        //check if it works
 //        while(scan.hasNextLine()){
 //            System.out.println(scan.nextLine());
@@ -94,7 +94,7 @@ public class GATest1 {
             }
 
             /* Create new generation */
-            generateOffSpring(trainingSet, population);
+            generateOffSpringV2(trainingSet, population);
 //            population = Arrays.copyOf(offSpring, offSpring.length);
             i++;
 //            scan.next(); //used to wait every generation
@@ -224,6 +224,32 @@ public class GATest1 {
         FitnessFunction.sortPopulationByFitness(offspring);
 
         //take the best individuals from parents, and replace the worst individuals from offspring
+        int offset = 0;
+        for (int i = 0; i < offspring.length; i++) {
+            if(parentPopulation[parentPopulation.length-1].getFitness() > offspring[i].getFitness()){
+                offset++;
+            }
+            else{
+                break;
+            }
+        }
+        
+        //add parentpop[N-offset] to parentpop[N] to beginning of offspring
+        for (int i = 0; i < offset; i++) {
+            int parentIndex = parentPopulation.length - 1 - offset + i;
+            offspring[i] = parentPopulation[parentIndex];
+        }
+        
+        
+        //copy genes into population array parameter
+        for (int i = 0; i < offspring.length; i++) {
+            //copy genes
+            for (int j = 0; j < offspring[i].getGenesLength(); j++) {
+                population[i].setGeneFromIndex(j, offspring[i].getGeneFromIndex(j));
+            }
+
+        }
+        
     }
 
     /*

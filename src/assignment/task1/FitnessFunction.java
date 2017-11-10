@@ -128,7 +128,7 @@ public class FitnessFunction {
 
         //number correct TOTAL = 192 (rule condition + rule output * number of rules in training set)
         //(5+1) * 32 = 192.
-        tempFitness = tempFitness / trainingRuleset.length;
+//        tempFitness = tempFitness / trainingRuleset.length;
         if (Double.isNaN(tempFitness)) {
             System.out.println("NAN");
         }
