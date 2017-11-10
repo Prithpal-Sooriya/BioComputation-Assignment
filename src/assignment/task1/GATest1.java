@@ -16,14 +16,14 @@ import java.util.Scanner;
 public class GATest1 {
 
     private static final int POPULATION_SIZE = 25;
-    private static final int CHROMOSOME_LENGTH = 10; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
+    private static final int CHROMOSOME_LENGTH = 32; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
     private static final double MUTATION_RATE = 0.02; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
 
         /*read in the file: SUCCESS*/
-        Scanner scan = new Scanner(GATest1.class.getResourceAsStream("/Files/data1.txt"));
+        Scanner scan = new Scanner(GATest1.class.getResourceAsStream("/Files/data2.txt"));
 //        //check if it works
 //        while(scan.hasNextLine()){
 //            System.out.println(scan.nextLine());
@@ -76,7 +76,7 @@ public class GATest1 {
         long i = 0;
         boolean stop = true;
         while (stop) {
-            
+
             /* reset the fitness just to be safe... */
             for (int j = 0; j < population.length; j++) {
                 population[j].setFitness(0);
@@ -84,21 +84,14 @@ public class GATest1 {
 
             /* evaulate fitness */
             FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
-            
+
             showInformation(population);
-            
+
             /* evaluate stop condition */
             stop = !stopCondition(population, trainingSet);
-            if(stop == false) {
+            if (stop == false) {
                 break;
             }
-            
-            /* other fitness evaluations */
-//            FitnessFunction.convertFitnessQuadratic(population, 2);
-            FitnessFunction.convertFitnessQuadratic(population, 2);
-            FitnessFunction.addFitnessBiasToHighest(population, 100); //bias is a multiplication (maybe we should change this into an addition)
-//            FitnessFunction.normalizeFitnessToTotal(population);
-            
 
             /* Create new generation */
             generateOffSpring(trainingSet, population);
@@ -106,9 +99,8 @@ public class GATest1 {
             i++;
 //            scan.next(); //used to wait every generation
         }
-        
+
         System.out.println("NUMBER OF GENERATIONS: " + i);
-        
 
     }
 
@@ -119,15 +111,31 @@ public class GATest1 {
      */
     //tidy up the stop condition
     private static int stopConditionSingle(Rule rule, Individual individual) {
-
+        int counter = 0;
         //check if any of the genes matches the rule
         for (Rule gene : individual.getGenes()) {
-            if (rule.compareTo(gene) == 0) {
-                return 1; //the rule does match to a gene!
+            counter = 0;
+            for (int i = 0; i < rule.getConditionLength(); i++) {
+                if (gene.getConditionValueFromIndex(i) == rule.getConditionValueFromIndex(i)
+                        || gene.getConditionValueFromIndex(i) == 2) {
+                    counter++;
+                }
             }
+
+            if (counter >= rule.getConditionLength()) {
+                if (gene.getOutput() == rule.getOutput()) {
+                    return 1; //condition and output matched
+                }
+                else{
+                    return 0; //condition matched but rule did not match
+                }
+            }
+//            if (rule.compareTo(gene) == 0) {
+//                return 1; //the rule does match to a gene!
+//            }
         }
 
-        return 0; //all does not match.
+        return 0; //none match 
     }
 
     private static boolean stopCondition(Individual[] population, Rule[] testingSet) {
@@ -142,11 +150,14 @@ public class GATest1 {
             for (Rule rule : testingSet) {
                 numberCorrect += stopConditionSingle(rule, individual);
             }
-            
+
             //check if that person matches all the rules
             if (numberCorrect == testingSet.length) {
                 System.out.println("=================================");
                 System.out.println("Correct Individual from population:");
+                //recalculate the individuals fitness
+                individual = FitnessFunction.fitnessFunctionCompareConditionsSingle(testingSet, individual);
+
                 System.out.println(individual.toString());
                 return true;
             }
@@ -170,11 +181,63 @@ public class GATest1 {
 //        System.out.println("============================");
     }
 
+    private static void generateOffSpringV2(Rule[] trainingSet, Individual[] population) {
+        //clone the parent population
+        Individual[] parentPopulation = Arrays.copyOf(population, population.length);
+
+        /* other fitness evaluations */
+//            FitnessFunction.convertFitnessQuadratic(population, 2);
+        FitnessFunction.convertFitnessQuadratic(population, 2);
+        FitnessFunction.addFitnessBiasToHighest(population, 100); //bias is a multiplication (maybe we should change this into an addition)
+//            FitnessFunction.normalizeFitnessToTotal(population);
+
+        Individual offspring[] = new Individual[population.length];
+
+        for (int i = 0; i < offspring.length; i++) {
+
+            //selection of parents
+            Individual parents[] = new Individual[2];
+            parents[0] = Selection.fitnessProportionateSelection(population);
+            parents[1] = Selection.fitnessProportionateSelection(population);
+
+            //crossover
+            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
+
+            //add the crossover to the offspring array
+            offspring[i] = children[0];
+            if (i + 1 < offspring.length) {
+                i++;
+                offspring[i] = children[1];
+            }
+        }
+
+        //mutation --> place this for loop in the mutation function.
+        for (int i = 0; i < offspring.length; i++) {
+            offspring[i] = Mutation.mutationGenericsV2(offspring[i], MUTATION_RATE);
+        }
+
+        //fitness function on child
+        FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, offspring);
+
+        //sort both old and new generation
+        FitnessFunction.sortPopulationByFitness(parentPopulation);
+        FitnessFunction.sortPopulationByFitness(offspring);
+
+        //take the best individuals from parents, and replace the worst individuals from offspring
+    }
+
     /*
     Generate offspring
     includes selection, crossover, and mutation
      */
     private static void generateOffSpring(Rule[] trainingSet, Individual[] population) {
+
+        /* other fitness evaluations */
+//            FitnessFunction.convertFitnessQuadratic(population, 2);
+        FitnessFunction.convertFitnessQuadratic(population, 2);
+        FitnessFunction.addFitnessBiasToHighest(population, 100); //bias is a multiplication (maybe we should change this into an addition)
+//            FitnessFunction.normalizeFitnessToTotal(population);
+
         Individual offspring[] = new Individual[population.length];
 
         for (int i = 0; i < offspring.length; i++) {
@@ -203,12 +266,12 @@ public class GATest1 {
         //lets copy to the population individually, this might be the cause of the object referencing being the same!!!
         //FIXED
         for (int i = 0; i < offspring.length; i++) {
-            
+
             //copy genes
             for (int j = 0; j < offspring[i].getGenesLength(); j++) {
                 population[i].setGeneFromIndex(j, offspring[i].getGeneFromIndex(j));
             }
-            
+
         }
     }
 
