@@ -83,10 +83,20 @@ public class FitnessFunction {
     }
 
     //IMPLEMENTED GENERICS
+    /*
+    Kind of flawed
+    - It is correct by we should break out when all the conditions have been met (even if the ouput is incorrect)
+    - However it evenly distributes fitness for conditions and output
+        - We want to highly reward an individual for if they match all conditions AND outputs completely!
+    
+    - I will revisit this so there is a higher distribution to the correct output when all the conditions are correct
+        if(output = ruleOutput) counter+100; //maybe? Or maybe do counter and subtract for each part that is incorrect?
+    */
     public static Individual fitnessFunctionCompareConditionsSingle(Rule[] trainingRuleset, Individual individual) {
 
-        individual.setFitness(0); //reset each individuals fitness
-
+        //reset the fitness to 0
+        individual.setFitness(0);
+        
         double highestMatchingRate = 0;
         double tempFitness = 0;
         double counter = 0;
@@ -141,82 +151,32 @@ public class FitnessFunction {
         //have to return back the individual, because the changes are not kept on an Object (pass by value)
         return individual;
     }
-
-//    public static Individual fitnessFunctionCompareConditionsSingleV2(Rule[] trainingRuleSet, Individual individual) {
-//        //set the individual fitness to 0 (just to start with)
-//        individual.setFitness(0);
-//
-//        //counter to hold the how many conditions were correct
-//        double newFitness = 0;
-//        double tempHighest = 0;
-//        int counter = 0;
-//
-//        for (Rule rule : trainingRuleSet) { //each rule
-//            
-//            tempHighest = 0;
-//
-//            for (int i = 0; i < individual.getGenesLength(); i++) { //each gene
-//                counter = 0;
-//                Rule gene = individual.getGeneFromIndex(i);
-//
-//                for (int j = 0; j < gene.getConditionLength(); j++) { //each gene condition bit
-//                    if (rule.getConditionValueFromIndex(j) == gene.getConditionValueFromIndex(j)
-//                            || gene.getConditionValueFromIndex(j) == 2) {
-//                        counter++;
-//                    }
-//                }
-//                
-//                /*
-//                check if the whole condition matches
-//                if the whole condition matches, check the output
-//                    if output matches counter++
-//                counter/size of rule
-//                
-//                BREAK; //if the whole rule matches, even if the output is incorrect we will still use it!
-//                */
-//                if(counter == rule.getConditionLength()) {
-//                    if(rule.getOutput() == gene.getOutput()) {
-//                        counter++;
-//                    }
-//                    tempHighest = (double)((double)counter/(rule.getConditionLength()+1));
-//                    
-//                    break; //go to next rule, as we have a matching condition (even if the output is incorrect)
-//                }
-//                else {
-//                    //no condition matched, so lets get the temp highest
-//                    if(tempHighest < (counter/rule.getConditionLength()+1)){
-//                        tempHighest = (double) ((double)counter/(rule.getConditionLength()+1));
-//                    }
-//                }
-//
-//            }
-//            
-//            //out of checking all genes for 1 rule, lets add whatever the highest was to new fitness
-////            System.out.println("tempHighest: " + tempHighest);
-//            newFitness += tempHighest;
-//
-//        }
-//        
-//        //finally /number of rules
-//        newFitness /= trainingRuleSet.length;
-//        
-//        individual.setFitness(newFitness);
-//        return individual;
-//
-//    }
-    
+ 
     //final version, we can use this to compare if all the rules in the genes in an individual are correct
     //This can be used near the end stages to see select individuals in the population who have complete sets
-    //EDIT: NEEDED TO ACCOMODATE GENERIC CONDITIONS
     public static void fitnessFunctionCompareRulesAll(Rule[] trainingRuleset, Individual[] population) {
         for (int i = 0; i < population.length; i++) {
-            population[i].setFitness(0);
             population[i] = fitnessFunctionCompareRulesSingle(trainingRuleset, population[i]);
-
         }
     }
 
+    /*
+    This version of the fitness function will increment the fitness of an individual when:
+        - all of their conditions AND output are correct for a gene
+            - we will break out when all the conditions are correct,
+              so there will be cases when it will break and the fitness is not incremented
+            - This means (worst case) that an individual may have a fitness of 0
+                - This individual/s will be mutated/replaced in the next generation....
+                - Might want to think of a better way to use these individuals
+                  (for example they might match the conditions but not the output...)
+    
+    */
     public static Individual fitnessFunctionCompareRulesSingle(Rule[] trainingRuleset, Individual individual) {
+        
+        //reset the fitness
+        individual.setFitness(0);
+        
+        
         double tempFitness = 0;
         int allCorrect = 0;
 //        double incorrectFitness = 0;
@@ -224,7 +184,8 @@ public class FitnessFunction {
         for (Rule rule : trainingRuleset) { //loop through each rule
             for (int i = 0; i < individual.getGenesLength(); i++) { //loop through each gene
                 allCorrect = 0;
-                //compare each rule in the ruleset to the genes of the individual
+                
+                //compare each rule conditions to the gene conditions
                 for (int j = 0; j < rule.getConditionLength(); j++) { //loop through each condition
                     if (rule.getConditionValueFromIndex(j) == individual.getGeneFromIndex(i).getConditionValueFromIndex(j)
                             || individual.getGeneFromIndex(i).getConditionValueFromIndex(j) == 2) {
@@ -232,27 +193,23 @@ public class FitnessFunction {
                     }
                 }
 
-                if (allCorrect >= rule.getConditionLength()) { //if a gene matches rule
-                    tempFitness++;
-                    break; //we will now test the next rule (this will be so we can form a basic conflict resolution)
+                if (allCorrect >= rule.getConditionLength()) { //conditions match
+                    if(individual.getGeneFromIndex(i).getOutput() == rule.getOutput()){
+                        tempFitness++; //increment the fitness
+                    }
+                    break; //we will break when the conditions match (even if the outputs do not match/fitness is not incremented)
                 }
-//                else {
-//                    incorrectFitness++;
-//                }
-                //at the end of each RULE we can div by length of rule?
-                //gives us a larger fitness if we just div at end?
-//                tempFitness /= rule.getConditionLength();
             }
         }
 
         //now at the end, we can div by size of training ruleset (as this time we are looking at complete rules.
         //so for this we can say an individual got e.g. 3/7 rules correct.
-        tempFitness /= trainingRuleset.length;
+//        tempFitness /= trainingRuleset.length;
 
-        //might want to add a check, in case the result is 0..
-        if (tempFitness == 0) {
-            tempFitness = 0.001; //dunno bout this...
-        }
+        //might want to add a check, in case the result is 0.., this will help mitigate the loss of a decent individual
+//        if (tempFitness == 0) {
+//            tempFitness = 0.001; //dunno bout this...
+//        }
 
         individual.setFitness(tempFitness);
 

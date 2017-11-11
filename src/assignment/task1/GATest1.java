@@ -15,10 +15,11 @@ import java.util.Scanner;
  */
 public class GATest1 {
 
-    private static final int POPULATION_SIZE = 25;
-    private static final int CHROMOSOME_LENGTH = 32; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
+    //HYPER PARAMETERS
+    private static final int POPULATION_SIZE = 100;
+    private static final int CHROMOSOME_LENGTH = 64; //chromosome length != DNA length, as chromosome becomes decoded and encoded to binary string later on
     private static final double CROSSOVER_RATE = 0.9; // 0.6-0.9
-    private static final double MUTATION_RATE = 0.04; // 1/popsize - 1/chromosome length (or DNA length)
+    private static final double MUTATION_RATE = 0.02; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
 
@@ -83,7 +84,8 @@ public class GATest1 {
             }
 
             /* evaulate fitness */
-            FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
+//            FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, population);
+              FitnessFunction.fitnessFunctionCompareRulesAll(trainingSet, population);
 
             showInformation(population);
 
@@ -144,18 +146,21 @@ public class GATest1 {
 
         //loop through each person
         for (Individual individual : population) {
-            numberCorrect = 0;
-            //loop through each rule
-            for (Rule rule : testingSet) {
-                numberCorrect += stopConditionSingle(rule, individual);
-            }
+//            numberCorrect = 0;
+//            //loop through each rule
+//            for (Rule rule : testingSet) {
+//                numberCorrect += stopConditionSingle(rule, individual);
+//            }
 
+            FitnessFunction.fitnessFunctionCompareRulesSingle(testingSet, individual);
+            numberCorrect = (int)individual.getFitness();
+            
             //check if that person matches all the rules
             if (numberCorrect >= testingSet.length) {
                 System.out.println("=================================");
                 System.out.println("Correct Individual from population:");
                 //recalculate the individuals fitness
-                individual = FitnessFunction.fitnessFunctionCompareConditionsSingle(testingSet, individual);
+                individual = FitnessFunction.fitnessFunctionCompareRulesSingle(testingSet, individual);
 
                 System.out.println(individual.toString());
                 return true;
@@ -216,28 +221,29 @@ public class GATest1 {
         }
 
         //fitness function on child
-        FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, offspring);
-
+//        FitnessFunction.fitnessFunctionCompareConditionsAll(trainingSet, offspring);
+        FitnessFunction.fitnessFunctionCompareRulesAll(trainingSet, offspring);
+        
         //sort both old and new generation
         FitnessFunction.sortPopulationByFitness(parentPopulation);
         FitnessFunction.sortPopulationByFitness(offspring);
 
-        //take the best individuals from parents, and replace the worst individuals from offspring
-        int offset = 0;
-        for (int i = 0; i < offspring.length; i++) {
-            if(parentPopulation[parentPopulation.length-1].getFitness() > offspring[i].getFitness()){
-                offset++;
-            }
-            else{
-                break;
-            }
-        }
-        
-        //add parentpop[N-offset] to parentpop[N] to beginning of offspring
-        for (int i = 0; i < offset; i++) {
-            int parentIndex = parentPopulation.length - offset + i;
-            offspring[i] = parentPopulation[parentIndex];
-        }
+//        //take the best individuals from parents, and replace the worst individuals from offspring
+//        int offset = 0;
+//        for (int i = 0; i < offspring.length; i++) {
+//            if(parentPopulation[parentPopulation.length-1].getFitness() > offspring[i].getFitness()){
+//                offset++;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//        
+//        //add parentpop[N-offset] to parentpop[N] to beginning of offspring
+//        for (int i = 0; i < offset; i++) {
+//            int parentIndex = parentPopulation.length - offset + i;
+//            offspring[i] = parentPopulation[parentIndex];
+//        }
         
         
         //copy genes into population array parameter
