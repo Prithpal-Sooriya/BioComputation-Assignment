@@ -307,7 +307,7 @@ public class FitnessFunction {
         //create the bias
         double newFitness = population[maxFitnessIndex].getFitness();
         totalFitness -= newFitness; //remove it from the total (used for if we want to use total fitness again...)
-        newFitness += bias;
+        newFitness *= bias;
         totalFitness += newFitness; //add back to total (used for if we want to use total fitness again...)
         population[maxFitnessIndex].setFitness(newFitness);
 
