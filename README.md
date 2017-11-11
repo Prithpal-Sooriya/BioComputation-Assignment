@@ -23,29 +23,41 @@
 
 - Expected output --> individual with least generic rules first, and more generic rules near the end
 
+- NOTE: dataset1 is quite/very random -> so we will not expect an individual to complete unless they have 32 genes (so hardcode match all the rules!)
+- NOTE: dataset2 is ordered, and after speaking to Larry we can get the number of genes/rules for an individual down to 10 (or even lower to 5).
+
 ------------------------------------------
 TODO COMPLETE:
 - inversion crossover = DONE
+
 - generic mutation function = DONE
+
 - output mutation function = DONE
+
 - fitness function that allows generics = DONE
+
 - try running test1. = DONE, Now I have to decrease the number of generations it takes to get to the global optimal.
+
 - try adding a conflict resolution (so if 2 genes match the same rule --> pick a gene which is "better" with most rules)
   - add an array in Rules to hold indices of genes which conflict
   - something to indicate which genes (of an individual) are being used on training and testing data
+
 - Conflict Resolution = first gene that matches, DONE! --> How larry suggested doing this.
-
-TODO NOT DONE:
-
-- FIX FITNESS FUNCTION AND STOP CONDITION, AND CHECK SUBARRAY SWAP
 
 - Generics --> how much generics should I include --> how to create an individual with first rules not as generic, and last rules more generic.
   - Make sure a rule's condition is not all made up of genetics = DONE
 
-- add in inversion crossover (where we swap places of rules)
-
-- Add in sorting population by fitness
+- Add in sorting population by fitness = DONE
   - Add in the subset of best parents swap for subset of worst children.
+
+TODO NOT DONE:
+
+- FIX FITNESS FUNCTION AND STOP CONDITION, AND CHECK SUBARRAY SWAP
+  - After gaining some feedback, lets try a different approach to the fitness function
+    - lets increase the fitness on if the condition AND output is correct (not for each bit that is correct)
+      - as we want to reward an individual more when the whole rule is correct, not by if they are only partially correct...
+
+- add in inversion crossover (where we swap places of rules)
 
 - Add in weights
   - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
