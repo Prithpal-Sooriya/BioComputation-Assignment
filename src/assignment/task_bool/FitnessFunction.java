@@ -67,7 +67,7 @@ public class FitnessFunction {
         }
 
         for (int i = 0; i < population.length; i++) {
-            population[i].setFitness(
+            population[i].setNormalizedFitness(
                     normalizeFitness(population[i].getFitness(), 0, totalFitness, 0, 1));
 //            double newFitness = (double) population[i].getFitness() / (double) totalFitness;
 //              System.out.println("nft total fit: " + totalFitness);
@@ -217,7 +217,7 @@ public class FitnessFunction {
         individual.setFitness(tempFitness);
 
         //have to return back the individual, because the changes are not kept on an Object (pass by value)
-        return individual;
+        return Individual.clone(individual);
     }
 
     /*

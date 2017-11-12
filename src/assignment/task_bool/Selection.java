@@ -20,8 +20,8 @@ public class Selection {
     public static Individual tornamentSelection(Individual[] population) {
         //for this we select 2 individuals at random and pick the parent who has the higher fitness
         Random rand = new Random();
-        Individual parent1 = population[rand.nextInt(population.length)];
-        Individual parent2 = population[rand.nextInt(population.length)];
+        Individual parent1 = Individual.clone(population[rand.nextInt(population.length)]);
+        Individual parent2 = Individual.clone(population[rand.nextInt(population.length)]);
 
         return parent1.getFitness() > parent2.getFitness() ? parent1 : parent2;
 
@@ -30,16 +30,16 @@ public class Selection {
     //roulette wheel
     public static Individual fitnessProportionateSelection(Individual[] population) {
 
-        FitnessFunction.normalizeFitnessToTotal(population);
+        FitnessFunction.normalizeFitnessToTotal(population); //normalise each persons fitness between 0-1
 
         //and from this, we will do roulette wheel
         double rouletteStop = Math.random();
 
         for (int i = 0; i < population.length; i++) {
-            rouletteStop -= population[i].getFitness();
+            rouletteStop -= population[i].getNormalizedFitness();
 
             if (rouletteStop < 0) {
-                return population[i];
+                return Individual.clone(population[i]);
             }
         }
         

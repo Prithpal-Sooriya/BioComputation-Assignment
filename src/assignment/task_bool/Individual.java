@@ -16,7 +16,7 @@ public class Individual {
 
     private Rule genes[];
     private double fitness;
-    private double tempFitness; //mitigate the array setter getter mismatch
+    private double normalizedFitness; //mitigate the array setter getter mismatch
 
     public Individual(int numberOfGenes, int sizeOfCondition) {
 
@@ -32,6 +32,29 @@ public class Individual {
         randomiseGenes(this.genes);
 
     }
+    
+    public Individual(Rule[] genes) {
+        this.genes = genes;
+        fitness = 0;
+    }
+    
+    public static Individual clone(Individual ind) {
+        Rule[] copiedGenes = new Rule[ind.getGenesLength()];
+        
+        //populate rules
+        for (int i = 0; i < ind.getGenesLength(); i++) {
+            Rule rule = ind.getGeneFromIndex(i);
+            copiedGenes[i] = new Rule(rule.getConditionLength(), rule.getOutput());
+            for (int j = 0; j < copiedGenes[i].getConditionLength(); j++) {
+                copiedGenes[i].setConditionValueFromIndex(j, rule.getConditionValueFromIndex(j));
+            }
+        }
+        
+        Individual newInd = new Individual(copiedGenes);
+        newInd.setFitness(ind.getFitness());
+        
+        return newInd;
+    }
 
     private static void randomiseGenes(Rule genes[]) {
         for (int i = 0; i < genes.length; i++) {
@@ -41,12 +64,12 @@ public class Individual {
     
     /*Setters and Getters*/
 
-    public double getTempFitness() {
-        return tempFitness;
+    public double getNormalizedFitness() {
+        return normalizedFitness;
     }
 
-    public void setTempFitness(double tempFitness) {
-        this.tempFitness = tempFitness;
+    public void setNormalizedFitness(double normalizedFitness) {
+        this.normalizedFitness = normalizedFitness;
     }
     
     public Rule[] getGenes() {

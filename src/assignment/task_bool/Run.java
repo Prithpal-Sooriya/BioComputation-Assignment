@@ -10,16 +10,16 @@ package assignment.task_bool;
  * @author Prithpal Sooriya
  */
 public class Run {
-    
+
     public static void main(String[] args) {
-        
+
         GABool run = new GABool("data2.txt");
-        run.setPopulationSize(25);
-        run.setChromosomeLength(64);
+        run.setPopulationSize(100);
+        run.setChromosomeLength(5);
         run.setCrossoverRate(0.9);
-        run.setMutationRate(0.002);
-        
+        run.setMutationRate(0.04);
+
         run.run();
     }
-    
+
 }

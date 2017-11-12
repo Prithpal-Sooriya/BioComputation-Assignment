@@ -176,20 +176,15 @@ public class GABool {
         }
 
         /* commence swap */
-        System.arraycopy(parentPopulation, parentPopulation.length-offset, offspringPopulation, 0, offset);
+//        System.arraycopy(parentPopulation, parentPopulation.length-offset, offspringPopulation, 0, offset);
  /*
         NOTE: might be better to swap the genes and fitness rather than the whole
               Individual object (ran into issues last time this happened...)
          */
-//        for (int i = 0; i < offset; i++) {
-//            int parentIndex = parentPopulation.length - offset + i;
-//            for (int j = 0; j < offspringPopulation[i].getGenesLength(); j++) {
-//                offspringPopulation[i].setGeneFromIndex(j, parentPopulation[parentIndex].getGeneFromIndex(j));
-//            }
-//            offspringPopulation[i].setFitness(parentPopulation[parentIndex].getFitness());
-//
-////            offspringPopulation[i] = parentPopulation[parentIndex];
-//        }
+        for (int i = 0; i < offset; i++) {
+            int parentIndex = parentPopulation.length - offset + i;
+            offspringPopulation[i] = Individual.clone(parentPopulation[parentIndex]);
+        }
     }
 
     /*
@@ -203,7 +198,7 @@ public class GABool {
         }
 
         //return last individual (which has highest fitness)
-        bestIndividual = offspringPopulation[POPULATION_SIZE - 1];
+        bestIndividual = Individual.clone(offspringPopulation[POPULATION_SIZE - 1]);
     }
 
     /*
@@ -284,9 +279,10 @@ public class GABool {
         //NOTE, Arrays.copyOf copies the reference/pointer of parentpopulation
         Individual[] parentPopulationCopy = new Individual[POPULATION_SIZE];
         for (int i = 0; i < parentPopulationCopy.length; i++) {
-            parentPopulationCopy[i] = new Individual(CHROMOSOME_LENGTH, CLASSIFIER_LENGTH);
-            parentPopulationCopy[i].setGenes(parentPopulation[i].getGenes());
-            parentPopulationCopy[i].setFitness(parentPopulation[i].getFitness()); 
+            parentPopulationCopy[i] = Individual.clone(parentPopulation[i]);
+//            parentPopulationCopy[i] = new Individual(CHROMOSOME_LENGTH, CLASSIFIER_LENGTH);
+//            parentPopulationCopy[i].setGenes(parentPopulation[i].getGenes());
+//            parentPopulationCopy[i].setFitness(parentPopulation[i].getFitness()); 
         }
 
         FitnessFunction.convertFitnessQuadratic(parentPopulationCopy, 2);
@@ -296,8 +292,8 @@ public class GABool {
         for (int i = 0; i < offspringPopulation.length; i++) {
             /* Selection */
             Individual[] parents = new Individual[2];
-            parents[0] = Selection.tornamentSelection(parentPopulationCopy);
-            parents[1] = Selection.tornamentSelection(parentPopulationCopy);
+            parents[0] = Selection.fitnessProportionateSelection(parentPopulationCopy);
+            parents[1] = Selection.fitnessProportionateSelection(parentPopulationCopy);
 
             /* Crossover */
             //creates 2 children
@@ -328,7 +324,10 @@ public class GABool {
     }
     
     private void copyChildrenToParents(Individual[] offspringPopulation, Individual parentPopulation[]) {
-        System.arraycopy(parentPopulation, 0, offspringPopulation, 0, POPULATION_SIZE);
+//        System.arraycopy(parentPopulation, 0, offspringPopulation, 0, POPULATION_SIZE);
+          for (int i = 0; i < parentPopulation.length; i++) {
+            parentPopulation[i] = Individual.clone(offspringPopulation[i]);
+        }
     }
 
     /*
@@ -352,7 +351,7 @@ public class GABool {
         Scanner scan = new Scanner(System.in); //we can use this to examine every 1000th generation
         int numberOfGenerations = 0;
         boolean stopCondition = false;
-        while (!stopCondition) {
+        while (!stopCondition && numberOfGenerations < 1000) {
 
             //the fitness's of the offspring and children are not ordered anymore
             parentPopulationSorted = offspringPopulationSorted = false;
