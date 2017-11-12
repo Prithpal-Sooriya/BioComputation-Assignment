@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package assignment.task1;
+package assignment.task_bool;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -23,7 +23,7 @@ public class Testing {
     private static final double MUTATION_RATE = 0.04; // 1/popsize - 1/chromosome length (or DNA length)
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(GATest1.class.getResourceAsStream("/Files/data1.txt"));
+        Scanner scan = new Scanner(GABool.class.getResourceAsStream("/Files/data1.txt"));
 
         /*
         transfer the contents of the file into training and testing dataset

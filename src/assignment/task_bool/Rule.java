@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package assignment.task1;
+package assignment.task_bool;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -31,11 +31,14 @@ public class Rule implements Comparable<Rule>{
         this.output = output;
     }
 
+    /*
+    Randomise the rule (used when initialising and individual)
+    */
     public static void randomiseRule(Rule rule) {
         //randomise condition
         Random rand = new Random();
         for (int i = 0; i < rule.getConditionLength(); i++) {
-            rule.setConditionValueFromIndex(i, rand.nextInt(2));
+            rule.setConditionValueFromIndex(i, rand.nextInt(3)); //EDIT: changed to 3 so the initial population will have generics
         }
         //randomise output
         rule.setOutput(rand.nextInt(2));

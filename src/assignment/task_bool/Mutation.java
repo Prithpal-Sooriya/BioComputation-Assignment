@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package assignment.task1;
+package assignment.task_bool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +42,52 @@ public class Mutation {
             }
             //set new rule back to gene position
             ind.setGeneFromIndex(i, newRule);
+        }
+        return ind;
+    }
+
+    public static Individual limitGenerics(Individual ind, int maxGenerics) {
+        int numberOfGenerics = 0;
+        for (int i = 0; i < ind.getGenesLength(); i++) { //loop through each gene
+
+            //check how many generics
+            numberOfGenerics = 0;
+            for (int j : ind.getGeneFromIndex(i).getCondition()) {
+                if (j == 2) {
+                    numberOfGenerics++;
+                }
+            }
+
+            if (numberOfGenerics >= maxGenerics) {
+                Random rand = new Random();
+
+                if (numberOfGenerics == ind.getGeneFromIndex(i).getConditionLength()) {
+                    //the whole rule condition is generic
+
+                    //we can mutate a random position back to binary
+                    if (numberOfGenerics == ind.getGeneFromIndex(i).getConditionLength()) {
+                        ind.getGeneFromIndex(i).setConditionValueFromIndex(
+                                rand.nextInt(ind.getGeneFromIndex(i).getConditionLength()), rand.nextInt(2));
+                    }
+                } else {
+                    //wanted to limit generics < condition size
+
+                    //pick a random generic (and sequential search until we find it) and mutate back to binary
+                    int randomGenericNumber = rand.nextInt(numberOfGenerics);
+                    int numberOfGenericsPassed = 0;
+                    for (int j = 0; j < ind.getGeneFromIndex(i).getConditionLength(); j++) {
+                        if(ind.getGeneFromIndex(i).getConditionValueFromIndex(j) == 2){
+                            numberOfGenericsPassed++;
+                            
+                            if(numberOfGenericsPassed > randomGenericNumber){
+                                //change this generic to binary
+                                ind.getGeneFromIndex(i).setConditionValueFromIndex(j, rand.nextInt(2));
+                                break; //we can break out of the loop!
+                            }
+                        }
+                    }
+                }
+            }
         }
         return ind;
     }
@@ -106,15 +152,14 @@ public class Mutation {
 
         //var to hold how many generics are in a gene
         int numberOfGenerics = 0;
-        
+
         //Random number generator
         Random rand = new Random();
-        
 
         //loop through each gene for an individual
         for (int i = 0; i < ind.getGenes().length; i++) {
             Rule newRule = ind.getGeneFromIndex(i);
-            
+
             //now do mutations on condition
             for (int j = 0; j < newRule.getConditionLength(); j++) {
 
@@ -132,36 +177,17 @@ public class Mutation {
                      */
                     Integer[] valsTemp = {0, 1, 2};
                     ArrayList<Integer> vals = new ArrayList<>(Arrays.asList(valsTemp));
-                    if (newRule.getConditionValueFromIndex(j) == 3) {
-                        System.out.println("condition == 3");
-                    }
                     vals.remove(newRule.getConditionValueFromIndex(j));
                     newRule.setConditionValueFromIndex(j, vals.get(rand.nextInt(2))); //Pick a random index from the remaining 2 items in list
 
                 }
             }
-
-            //now that we have done the mutation for the whole condition,
-            //check how many generics are in the rule (we do not want all generics...)
-            numberOfGenerics = 0;
-            for (int conditionBit : newRule.getCondition()) {
-                if (conditionBit == 2) {
-                    numberOfGenerics++;
-                }
-            }
-            
-            //if they are all generics, lets just pick a random bit condition, and mutate back to binary
-            if(numberOfGenerics == newRule.getConditionLength()){
-                newRule.setConditionValueFromIndex(rand.nextInt(newRule.getConditionLength()), rand.nextInt(2));
-            }
-            
             
             //do mutations on output
             if (MUTATION_RATE >= Math.random()) {
                 //bitflip only on output
                 newRule.setOutput(newRule.getOutput() ^ 1);
             }
-
 
             //set the newrule back into gene position
             ind.setGeneFromIndex(i, newRule);

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package assignment.task1;
+package assignment.task_bool;
 
 import java.math.BigDecimal;
 import java.util.AbstractMap;
@@ -191,6 +191,9 @@ public class FitnessFunction {
                             || individual.getGeneFromIndex(i).getConditionValueFromIndex(j) == 2) {
                         allCorrect++;
                     }
+                    else {
+                        break; //speeds things up... as we do not need to continue if incorrect
+                    }
                 }
 
                 if (allCorrect >= rule.getConditionLength()) { //conditions match
@@ -291,13 +294,12 @@ public class FitnessFunction {
     This bias will be MULTIPLIED TO THE CURRENT FITNESS
      */
     public static void addFitnessBiasToHighest(Individual[] population, int bias) {
-        double totalFitness = 0;
+
         double maxFitness = 0;
         int maxFitnessIndex = 0;
 
         //get total and max fitness
         for (int i = 0; i < population.length; i++) {
-            totalFitness += population[i].getFitness();
             if (population[i].getFitness() > maxFitness) {
                 maxFitness = population[i].getFitness();
                 maxFitnessIndex = i;
@@ -306,17 +308,8 @@ public class FitnessFunction {
 
         //create the bias
         double newFitness = population[maxFitnessIndex].getFitness();
-        totalFitness -= newFitness; //remove it from the total (used for if we want to use total fitness again...)
         newFitness *= bias;
-        totalFitness += newFitness; //add back to total (used for if we want to use total fitness again...)
         population[maxFitnessIndex].setFitness(newFitness);
-
-        //re normalise the fitness for all population    
-//        for (int i = 0; i < population.length; i++) {
-//            newFitness = normalizeFitness(newFitness, 0, totalFitness, 0, 1);
-////            System.out.println("ff fit " + newFitness);
-//            population[i].setFitness(newFitness);
-//        }
     }
 
     /*
