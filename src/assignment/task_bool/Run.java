@@ -17,7 +17,7 @@ public class Run {
         run.setPopulationSize(25);
         run.setChromosomeLength(64);
         run.setCrossoverRate(0.9);
-        run.setMutationRate(0.03);
+        run.setMutationRate(0.002);
         
         run.run();
     }

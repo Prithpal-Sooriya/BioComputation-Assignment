@@ -49,11 +49,14 @@ public class Individual {
         this.tempFitness = tempFitness;
     }
     
-    
     public Rule[] getGenes() {
         return genes;
     }
 
+    public void setGenes(Rule[] genes) {
+        this.genes = genes;
+    }
+    
     public int getGenesLength() {
         return genes.length;
     }

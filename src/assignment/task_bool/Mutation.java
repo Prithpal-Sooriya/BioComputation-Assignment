@@ -193,9 +193,8 @@ public class Mutation {
             ind.setGeneFromIndex(i, newRule);
 
         }
-
+        
         return ind;
-
     }
 
     /*
