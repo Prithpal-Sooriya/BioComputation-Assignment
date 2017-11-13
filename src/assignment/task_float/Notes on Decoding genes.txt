@@ -1,0 +1,38 @@
+float[] allConditions = new float[Rule.getConditionLength*2*rules.length];
+int[] allOutputs = new float[rules.length];
+
+//decode conditions and outputs
+int outputIndex = 0;
+for(int i = 0; i < rules.length; i++){
+  for(int j = 0; j < rules[i].getConditionLength; j++){
+    int lowerBoundIndex = (i*rule[i].getConditionLength) + (j*2); //offset of each rule + offset for each bound
+    int upperBoundIndex = (i*rule[i].getConditionLength) + (j*2) + 1;
+  }
+  allOutputs[i] = rules[i].getOutput();
+}
+===========================
+rules length = 3
+condition length = 2
+===========================
+
+i = 0
+j = 0
+lower = 0
+upper = 1
+
+i = 0
+j = 1
+lower = 2
+upper = 3
+============
+i = 1
+j = 0
+lower = (1*3) + (0*2) = 3
+upper = (1*3) + (0*2) + 1 = 4
+
+i = 1
+j = 1
+lower = (1*3) + (1*2) = 5
+upper = (1*3) + (1*2) + 1 = 6
+
+//holy shit I got the index's right.. I think

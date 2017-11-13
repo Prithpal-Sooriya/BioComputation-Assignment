@@ -27,6 +27,7 @@
 - NOTE: dataset2 is ordered, and after speaking to Larry we can get the number of genes/rules for an individual down to 10 (or even lower to 5).
 
 ------------------------------------------
+
 TODO COMPLETE:
 - inversion crossover = DONE
 
@@ -50,30 +51,33 @@ TODO COMPLETE:
 - Add in sorting population by fitness = DONE
   - Add in the subset of best parents swap for subset of worst children.
 
-TODO NOT DONE:
-
-- FIX FITNESS FUNCTION AND STOP CONDITION, AND CHECK SUBARRAY SWAP
+- FIX FITNESS FUNCTION AND STOP CONDITION, AND CHECK SUBARRAY SWAP = DONE
   - After gaining some feedback, lets try a different approach to the fitness function
     - lets increase the fitness on if the condition AND output is correct (not for each bit that is correct)
       - as we want to reward an individual more when the whole rule is correct, not by if they are only partially correct...
 
-- add in inversion crossover (where we swap places of rules)
-
-- Add in weights
-  - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
-
-- Task 3 Data analysis
-  - clean data/reduce data
-  - dimensional reduction
-
-- Task 3 Genotype
+- Task 3 Genotype = DONE (research)
   - bounds array? (2.563<=x<=2.836) --> Larry said do this.
     - mutation = change bounds a small amount higher or lower
     - crossover = swap bounds
-
   - doubles array? (2.633)
     - mutation = change the values a small amount higher or lower
     - crossover = ?
+
+- Task 3 Data analysis = DONE (research)
+  - clean data/reduce data
+  - dimensional reduction
+
+------------------------------------------------
+
+TODO NOT DONE:
+
+- add in inversion crossover (where we swap places of rules)
+
+- Add in weights (this is extra stuff... may do this)
+  - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
+
+
 ------------------------------------------
 RESEARCH:
 - added research folder
