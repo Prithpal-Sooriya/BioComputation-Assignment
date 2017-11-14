@@ -22,8 +22,9 @@ public class GAFloat {
     private static final int POPULATION_SIZE = 100;
     private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
     private static final double CROSSOVER_RATE = 0.9;
-    private static final double MUTATION_RATE = 0.02; //1/popsize to 1/chromosomelength
-    private static final double OMEGA_RATE = 0.00005;
+    private static final double MUTATION_RATE = 0.008; //1/popsize to 1/chromosomelength
+    private static final double OMEGA_RATE = 0.01;
+    private static final int NUMBER_OF_GENERATIONS = 3000;
 
 //    private int POPULATION_SIZE;
 //    private int CHROMOSOME_LENGTH;
@@ -206,7 +207,7 @@ public class GAFloat {
         }
 
         /* Fitness Function Improve */
-//        FitnessFunction.convertFitnessQuadraticAll(parentPopulationCopy, 2);
+        FitnessFunction.convertFitnessQuadraticAll(parentPopulationCopy, 2);
         FitnessFunction.addFitnessBiasToHighest(parentPopulationCopy, 100); //adds 100 to best individual
 
         /* Selection / Crossover / Mutation */
@@ -268,7 +269,7 @@ public class GAFloat {
         int numberOfGenerations = 0;
         boolean stopCondition = false;
         Dataset set[];
-        while (!stopCondition && numberOfGenerations < 1000) {
+        while (!stopCondition && numberOfGenerations < NUMBER_OF_GENERATIONS) {
 
             //populations are not sorted
             parentPopulationSorted = offspringPopulationSorted = false;
