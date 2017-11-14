@@ -91,7 +91,6 @@ public class Individual {
             //convert list into arraylist
             ArrayList<Float> decodedGenesList = new ArrayList<Float>(Arrays.asList(decodedGenes));
             
-            int GeneIndex = 0;
             while(decodedGenesList.size() > 0) {
                 for (int i = 0; i < genes.length; i++) {
                     for (int j = 0; j < genes[i].getBoundsLength(); j++) {
