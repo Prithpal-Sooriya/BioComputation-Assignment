@@ -40,6 +40,12 @@ public class Bound {
         float tempUpperbound = Math.max(lowerbound, upperbound);
         this.lowerbound = tempLowerbound;
         this.upperbound = tempUpperbound;
+
+        //limit values between 0-1
+//        if(lowerbound < (float)0) lowerbound = 0;
+//        if(lowerbound > (float)1) lowerbound = 1;
+//        if(upperbound < (float)0) upperbound = 0;
+//        if(upperbound > (float)1) upperbound = 1;
     }
 
     //setter and getters
@@ -48,10 +54,9 @@ public class Bound {
     }
 
     public void setLowerbound(float lowerbound) {
-        if (lowerbound < 0) {
+        if (lowerbound < 0.0f) {
             this.lowerbound = 0;
-        }
-        if (lowerbound > 1) {
+        } else if (lowerbound > 1.0f) {
             this.lowerbound = 1;
         } else {
             this.lowerbound = lowerbound;
@@ -63,10 +68,9 @@ public class Bound {
     }
 
     public void setUpperbound(float upperbound) {
-        if (upperbound < 0) {
+        if (upperbound < 0.0f) {
             this.upperbound = 0;
-        }
-        if (upperbound > 1) {
+        } else if (upperbound > 1.0f) {
             this.upperbound = 1;
         } else {
             this.upperbound = upperbound;

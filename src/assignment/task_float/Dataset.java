@@ -47,6 +47,10 @@ public class Dataset {
         this.output = output;
     }
 
+    public int getConditionLength() {
+        return conditions.length;
+    }
+    
     //toString()
     @Override
     public String toString() {

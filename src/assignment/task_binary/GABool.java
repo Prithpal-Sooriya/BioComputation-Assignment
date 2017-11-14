@@ -301,11 +301,11 @@ public class GABool {
 
             /* Mutation */
             offspringPopulation[i] = children[0];
-            Mutation.mutationGenericsV2(offspringPopulation[i], MUTATION_RATE);
+            offspringPopulation[i] = Mutation.mutationGenericsV2(offspringPopulation[i], MUTATION_RATE);
             if (i + 1 < offspringPopulation.length) {
                 i++;
                 offspringPopulation[i] = children[1];
-                Mutation.mutationGenericsV2(offspringPopulation[i], MUTATION_RATE);
+                offspringPopulation[i] = Mutation.mutationGenericsV2(offspringPopulation[i], MUTATION_RATE);
             }
         }
 

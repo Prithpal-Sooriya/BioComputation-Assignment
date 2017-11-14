@@ -29,34 +29,35 @@
 ------------------------------------------
 
 TODO COMPLETE:
-- inversion crossover = DONE
 
-- generic mutation function = DONE
+- [x] inversion crossover = DONE
 
-- output mutation function = DONE
+- [x] generic mutation function = DONE
 
-- fitness function that allows generics = DONE
+- [x] output mutation function = DONE
 
-- try running test1. = DONE, Now I have to decrease the number of generations it takes to get to the global optimal.
+- [x] fitness function that allows generics = DONE
 
-- try adding a conflict resolution (so if 2 genes match the same rule --> pick a gene which is "better" with most rules)
+- [x] try running test1. = DONE, Now I have to decrease the number of generations it takes to get to the global optimal.
+
+- [x] try adding a conflict resolution (so if 2 genes match the same rule --> pick a gene which is "better" with most rules)
   - add an array in Rules to hold indices of genes which conflict
   - something to indicate which genes (of an individual) are being used on training and testing data
 
-- Conflict Resolution = first gene that matches, DONE! --> How larry suggested doing this.
+- [x] Conflict Resolution = first gene that matches, DONE! --> How larry suggested doing this.
 
-- Generics --> how much generics should I include --> how to create an individual with first rules not as generic, and last rules more generic.
+- [x] Generics --> how much generics should I include --> how to create an individual with first rules not as generic, and last rules more generic.
   - Make sure a rule's condition is not all made up of genetics = DONE
 
-- Add in sorting population by fitness = DONE
+- [x] Add in sorting population by fitness = DONE
   - Add in the subset of best parents swap for subset of worst children.
 
-- FIX FITNESS FUNCTION AND STOP CONDITION, AND CHECK SUBARRAY SWAP = DONE
+- [x] FIX FITNESS FUNCTION AND STOP CONDITION, AND CHECK SUBARRAY SWAP = DONE
   - After gaining some feedback, lets try a different approach to the fitness function
     - lets increase the fitness on if the condition AND output is correct (not for each bit that is correct)
       - as we want to reward an individual more when the whole rule is correct, not by if they are only partially correct...
 
-- Task 3 Genotype = DONE (research)
+- [x] Task 3 Genotype = DONE (research)
   - bounds array? (2.563<=x<=2.836) --> Larry said do this.
     - mutation = change bounds a small amount higher or lower
     - crossover = swap bounds
@@ -64,7 +65,7 @@ TODO COMPLETE:
     - mutation = change the values a small amount higher or lower
     - crossover = ?
 
-- Task 3 Data analysis = DONE (research)
+- [x] Task 3 Data analysis = DONE (research)
   - clean data/reduce data
   - dimensional reduction
 

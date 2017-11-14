@@ -1,3 +1,4 @@
+package assignment.task_float;
 
 import assignment.task_float.Individual;
 import java.util.Random;
