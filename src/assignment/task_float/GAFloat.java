@@ -23,7 +23,7 @@ public class GAFloat {
     private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
     private static final double CROSSOVER_RATE = 0.9;
     private static final double MUTATION_RATE = 0.02; //1/popsize to 1/chromosomelength
-    private static final double OMEGA_RATE = 0.001;
+    private static final double OMEGA_RATE = 0.00005;
 
 //    private int POPULATION_SIZE;
 //    private int CHROMOSOME_LENGTH;
@@ -295,6 +295,9 @@ public class GAFloat {
             /* Evaluate stop condition */
             stopCondition = stopCondition(trainingSet, bestIndividual);
 
+            /* Set Next Generation */
+            copyChildrenToParents(offspringPopulation, parentPopulation);
+            
             /* Increment generations */
             numberOfGenerations++;
         }
