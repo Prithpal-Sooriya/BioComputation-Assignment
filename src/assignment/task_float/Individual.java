@@ -98,6 +98,9 @@ public class Individual {
                         decodedGenesList.remove(0);
                         genes[i].getBoundFromIndex(j).setUpperbound(decodedGenesList.get(0));
                         decodedGenesList.remove(0);
+                        
+                        //make sure the lower and upper bounds are in the correct position
+                        genes[i].getBoundFromIndex(j).validateBounds();
                     }
                     genes[i].setOutput((int) (float)(decodedGenesList.get(0)));
                 }

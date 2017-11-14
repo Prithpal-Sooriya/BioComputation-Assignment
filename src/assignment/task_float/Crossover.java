@@ -36,7 +36,7 @@ public class Crossover {
                 }
             }
             
-            //encode parents
+            //encode parents --> bounds are validated inside
             parent1.encodeGenes(decodedParent1);
             parent2.encodeGenes(decodedParent2);
         }

@@ -38,7 +38,7 @@ public class Selection {
         for (int i = 0; i < population.length; i++) {
             rouletteStop -= population[i].getNormalizedFitness();
 
-            if (rouletteStop < 0) {
+            if (rouletteStop <= 0) {
                 return Individual.clone(population[i]);
             }
         }
