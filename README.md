@@ -72,6 +72,9 @@ TODO COMPLETE:
 
 TODO NOT DONE:
 
+- Now that dataset2 works, we need to output to file
+  - AND find out what schema/rules are used to match all rules.
+
 - add in inversion crossover (where we swap places of rules)
 
 - Add in weights (this is extra stuff... may do this)
