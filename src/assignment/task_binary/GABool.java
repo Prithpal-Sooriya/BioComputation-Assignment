@@ -140,7 +140,7 @@ public class GABool {
             parentPopulation[i] = offspringPopulation[i] = new Individual(CHROMOSOME_LENGTH, CLASSIFIER_LENGTH);
         }
 
-        bestIndividual = new Individual(POPULATION_SIZE, CLASSIFIER_LENGTH);
+        bestIndividual = new Individual(CHROMOSOME_LENGTH, CLASSIFIER_LENGTH);
     }
 
     /*
