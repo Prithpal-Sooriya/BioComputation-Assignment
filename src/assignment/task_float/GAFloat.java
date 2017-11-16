@@ -21,7 +21,7 @@ public class GAFloat {
     //HYPER PARAMETERS
     private static final int POPULATION_SIZE = 100;
     private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
-    private static final double CROSSOVER_RATE = 0.9;
+    private static final double CROSSOVER_RATE = 0.1;
     private static final double MUTATION_RATE = 0.008; //1/popsize to 1/chromosomelength
     private static final double OMEGA_RATE = 0.01;
     private static final int NUMBER_OF_GENERATIONS = 3000;
@@ -218,9 +218,29 @@ public class GAFloat {
             parents[1] = Selection.fitnessProportionateSelection(parentPopulationCopy);
 
             /* Crossover */
+            /*
+            After some research (and looking through the slides),
+            Single Point Crossover can be quite destructive
+            - if a rule is close to a solution -> single point crossover can move that rule away from its goal.
+            
+            Think about replacing this with blending crossover
+            */
             Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
 
             /* Mutation */
+            /*
+            Mutation creep is great for floating point genotypes
+            However Omega is fixed
+            
+            - Think about decreasing mutation rate from as closer we get to the ideal solution
+                - omega = 1 - number correct/total rules in set
+                    - if less rules correct = higher mutation bounds
+                    - if many rules correct = lower mutation bounds
+                
+                - More complex version
+                - omega = (max want to mutate by) - (number correct / total rules)*max want to mutate by#
+                - omega = 0.5 - ((#correct/total)*0.5) //so we restrict to max of 0.5 leaps in bounds
+            */
             children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, OMEGA_RATE);
             offspringPopulation[i] = children[0];
             if (i + 1 < offspringPopulation.length) {
