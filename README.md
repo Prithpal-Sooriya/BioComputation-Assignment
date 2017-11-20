@@ -94,3 +94,17 @@ TODO NOT DONE:
 RESEARCH:
 - added research folder
   - contains the information I was using for research and notes that I have made about them (can be used for my report).
+
+- Think about using a neural network for dataset 3 to compare
+
+- research fuzzy classifiers
+  - https://github.com/Apoptoz/FL_Classifier/blob/master/article.pdf
+
+
+- http://www.cs.bham.ac.uk/~rjh/courses/NatureInspiredDesign/2010-11/StudentWork/Group3/The%20Use%20of%20Evolutionary%20Algorithms%20in%20Data%20Mining.pdf
+
+
+- https://www.drmgrdu.ac.in/Thesis_doc/Documents/V.N.Rajavarman%20Thesis/final.pdf
+  - - 2.3.8 Issues in EA
+  - -3.3 The Strengths of GAs
+  - 4.2.1 Individual’s encoding

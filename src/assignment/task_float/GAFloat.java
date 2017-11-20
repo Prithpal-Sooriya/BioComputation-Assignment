@@ -20,10 +20,10 @@ public class GAFloat {
 
     //HYPER PARAMETERS
     private static final int POPULATION_SIZE = 100;
-    private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
-    private static final double CROSSOVER_RATE = 0.1;
-    private static final double BLEND_CROSSOVER_RATE = 0.1;
-    private static final double MUTATION_RATE = 0.001; //1/popsize to 1/chromosomelength
+    private static final int CHROMOSOME_LENGTH = 50; //10 is one of the smallest rulesets that you can have..
+    private static final double CROSSOVER_RATE = 0.9;
+    private static final double BLEND_CROSSOVER_RATE = 0.6;
+    private static final double MUTATION_RATE = 0.01; //1/popsize to 1/chromosomelength
     private static final double FIXED_OMEGA_RATE = 0.03;
     private static final int NUMBER_OF_GENERATIONS = 3000;
 
@@ -245,14 +245,16 @@ public class GAFloat {
                 - omega = (max want to mutate by) - (number correct / total rules)*max want to mutate by#
                 - omega = 0.5 - ((#correct/total)*0.5) //so we restrict to max of 0.5 leaps in bounds
              */
-            calculateVariableMutation(children[0], set);
-            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, variable_omega_rate);
+//            calculateVariableMutation(children[0], set);
+//            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, variable_omega_rate);
+            children[0] = Mutation.mutationRandom(children[0], MUTATION_RATE);
             offspringPopulation[i] = children[0];
 
             if (i + 1 < offspringPopulation.length) {
                 i++;
-                calculateVariableMutation(children[1], set);
-                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, variable_omega_rate);
+//                calculateVariableMutation(children[1], set);
+//                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, variable_omega_rate);
+                children[1] = Mutation.mutationRandom(children[1], MUTATION_RATE);
                 offspringPopulation[i] = children[1];
             }
         }
@@ -309,7 +311,7 @@ public class GAFloat {
             parentPopulationSorted = offspringPopulationSorted = false;
 
             //every 10 generations we want to test on testingset
-            if (numberOfGenerations % 10 == 0) {
+            if (numberOfGenerations % 100 == 0) {
                 set = testingSet;
             } else {
                 set = trainingSet;

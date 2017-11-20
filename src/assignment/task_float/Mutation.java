@@ -42,4 +42,30 @@ public class Mutation {
         
         return Individual.clone(ind);
     }
+    
+    public static Individual mutationRandom(Individual ind, double MUTATION_RATE) {
+        Rule newRule;
+        for (int i = 0; i < ind.getGeneLength(); i++) {
+            newRule = ind.getGeneFromIndex(i);
+            
+            /* Mutate using random */
+            for (int j = 0; j < newRule.getBoundsLength(); j++) {
+                if(MUTATION_RATE > Math.random()) {
+                    
+                    float lowerBound = (float) Math.random();
+                    float upperBound = (float) Math.random();
+                    newRule.getBoundFromIndex(j).setLowerbound(lowerBound);
+                    newRule.getBoundFromIndex(j).setUpperbound(upperBound);
+                    
+                    newRule.getBoundFromIndex(j).validateBounds();
+                }
+            }
+            if(MUTATION_RATE > Math.random()) {
+                newRule.setOutput(newRule.getOutput()^1);
+            }
+            ind.setGeneFromIndex(newRule, i);
+        }
+        
+        return Individual.clone(ind);
+    }
 }
