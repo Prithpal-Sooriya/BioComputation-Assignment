@@ -76,12 +76,10 @@ TODO NOT DONE:
 - Now that dataset2 works, we need to output to file
   - AND find out what schema/rules are used to match all rules.
 
-- add in inversion crossover (where we swap places of rules)
-
 - Add in weights (this is extra stuff... may do this)
   - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
 
-- [ ] Task3: blend crossover
+- [x] Task3: blend crossover
 - [x] Task3: when bounds become <0 || >1
   - [x] could limit bounds to be at 0 or 1 (however after running it with this, all bounds become stuck at 0 and 1)]
   - [x] could "bounce" the bounds back in

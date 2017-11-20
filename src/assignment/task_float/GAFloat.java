@@ -22,9 +22,12 @@ public class GAFloat {
     private static final int POPULATION_SIZE = 100;
     private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
     private static final double CROSSOVER_RATE = 0.1;
-    private static final double MUTATION_RATE = 0.008; //1/popsize to 1/chromosomelength
-    private static final double OMEGA_RATE = 0.01;
+    private static final double BLEND_CROSSOVER_RATE = 0.1;
+    private static final double MUTATION_RATE = 0.001; //1/popsize to 1/chromosomelength
+    private static final double FIXED_OMEGA_RATE = 0.03;
     private static final int NUMBER_OF_GENERATIONS = 3000;
+
+    private static double variable_omega_rate;
 
 //    private int POPULATION_SIZE;
 //    private int CHROMOSOME_LENGTH;
@@ -218,17 +221,18 @@ public class GAFloat {
             parents[1] = Selection.fitnessProportionateSelection(parentPopulationCopy);
 
             /* Crossover */
-            /*
+ /*
             After some research (and looking through the slides),
             Single Point Crossover can be quite destructive
             - if a rule is close to a solution -> single point crossover can move that rule away from its goal.
             
             Think about replacing this with blending crossover
-            */
-            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
+             */
+//            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
+            Individual[] children = Crossover.blendCrossover(parents[0], parents[1], BLEND_CROSSOVER_RATE);
 
             /* Mutation */
-            /*
+ /*
             Mutation creep is great for floating point genotypes
             However Omega is fixed
             
@@ -240,12 +244,15 @@ public class GAFloat {
                 - More complex version
                 - omega = (max want to mutate by) - (number correct / total rules)*max want to mutate by#
                 - omega = 0.5 - ((#correct/total)*0.5) //so we restrict to max of 0.5 leaps in bounds
-            */
-            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, OMEGA_RATE);
+             */
+            calculateVariableMutation(children[0], set);
+            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, variable_omega_rate);
             offspringPopulation[i] = children[0];
+
             if (i + 1 < offspringPopulation.length) {
                 i++;
-                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, OMEGA_RATE);
+                calculateVariableMutation(children[1], set);
+                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, variable_omega_rate);
                 offspringPopulation[i] = children[1];
             }
         }
@@ -262,6 +269,13 @@ public class GAFloat {
         /* set best individual */
         setBestIndividual();
 
+    }
+
+    private void calculateVariableMutation(Individual ind, Dataset[] set) {
+        //work out the number of rules the child can complete
+        FitnessFunction.fitnessFunctionCompareRulesSingle(set, ind);
+        //work out variable creep
+        variable_omega_rate = FIXED_OMEGA_RATE - ((ind.getFitness() / set.length) * FIXED_OMEGA_RATE);
     }
 
     private void copyChildrenToParents(Individual[] offSpringPopulation, Individual[] parentPopulation) {
@@ -309,7 +323,7 @@ public class GAFloat {
 
             /* Show Best Fitness */
             showBestFitness();
-            if(set == testingSet) {
+            if (set == testingSet) {
                 System.out.println("*");
             }
 
@@ -318,7 +332,7 @@ public class GAFloat {
 
             /* Set Next Generation */
             copyChildrenToParents(offspringPopulation, parentPopulation);
-            
+
             /* Increment generations */
             numberOfGenerations++;
         }
