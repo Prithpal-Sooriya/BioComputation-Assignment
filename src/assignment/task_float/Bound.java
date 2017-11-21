@@ -19,7 +19,7 @@ public class Bound {
         this.lowerbound = lowerbound;
         this.upperbound = upperbound;
 
-        validateBounds();
+//        validateBounds();
 
     }
 

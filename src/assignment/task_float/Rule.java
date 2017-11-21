@@ -18,7 +18,16 @@ public class Rule {
     
     //constructor that gives bounds and output
     public Rule(Bound bounds[], int output){
-        this.bounds = bounds;
+        
+        //might be getting issues with copying bounds
+        this.bounds = new Bound[bounds.length];
+        for (int i = 0; i < bounds.length; i++) {
+            float lowerBound = bounds[i].getLowerbound();
+            float upperBound = bounds[i].getUpperbound();
+            this.bounds[i] = new Bound(lowerBound, upperBound);
+        }
+        
+//        this.bounds = bounds;
         this.output = output;
     }
     

@@ -48,7 +48,8 @@ public class Individual {
         double fitness = ind.getFitness();
         
         for (int i = 0; i < genes.length; i++) {
-            genes[i] = ind.getGeneFromIndex(i);
+            genes[i] = new Rule(ind.getGeneFromIndex(i).getBounds(), ind.getGeneFromIndex(i).getOutput());
+            
         }
         
         return new Individual(genes, fitness);

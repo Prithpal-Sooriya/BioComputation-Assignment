@@ -71,6 +71,7 @@ public class FitnessFunction {
 
         for (Dataset dataset : trainingSet) { //loop through all trainingset
             for (Rule gene : individual.getGenes()) { //loop through all genes
+                allCorrect = 0;
                 for (int i = 0; i < gene.getBoundsLength(); i++) { //loop through all conditions
                     /*
                     the bounds length and the dataset.conditions.length are the same

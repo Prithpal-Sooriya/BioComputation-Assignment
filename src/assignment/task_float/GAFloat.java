@@ -19,12 +19,12 @@ public class GAFloat {
     private String inputFileDir;
 
     //HYPER PARAMETERS
-    private static final int POPULATION_SIZE = 100;
-    private static final int CHROMOSOME_LENGTH = 50; //10 is one of the smallest rulesets that you can have..
+    private static final int POPULATION_SIZE = 200;
+    private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
     private static final double CROSSOVER_RATE = 0.9;
     private static final double BLEND_CROSSOVER_RATE = 0.6;
     private static final double MUTATION_RATE = 0.01; //1/popsize to 1/chromosomelength
-    private static final double FIXED_OMEGA_RATE = 0.03;
+    private static final double FIXED_OMEGA_RATE = 0.3;
     private static final int NUMBER_OF_GENERATIONS = 3000;
 
     private static double variable_omega_rate;
@@ -130,9 +130,13 @@ public class GAFloat {
             sortPopulations();
         }
 
-        /* find location of where to start subarray swap */
+        /*
+        find location of where to start subarray swap
+        - maybe limit how much of the old generation I should keep (so it isnt a full clone of the parent!)
+        - maybe limit to 3 best parents for 3 worst offspring
+        */
         int offset = 0;
-        for (int i = 0; i < POPULATION_SIZE; i++) {
+        for (int i = 0; i < 4; i++) {
             if (parentPopulation[parentPopulation.length - 1].getFitness() > offspringPopulation[i].getFitness()) {
                 offset++;
             } else {
@@ -228,8 +232,8 @@ public class GAFloat {
             
             Think about replacing this with blending crossover
              */
-//            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
-            Individual[] children = Crossover.blendCrossover(parents[0], parents[1], BLEND_CROSSOVER_RATE);
+            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
+//            Individual[] children = Crossover.blendCrossover(parents[0], parents[1], BLEND_CROSSOVER_RATE);
 
             /* Mutation */
  /*
@@ -245,16 +249,16 @@ public class GAFloat {
                 - omega = (max want to mutate by) - (number correct / total rules)*max want to mutate by#
                 - omega = 0.5 - ((#correct/total)*0.5) //so we restrict to max of 0.5 leaps in bounds
              */
-//            calculateVariableMutation(children[0], set);
-//            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, variable_omega_rate);
-            children[0] = Mutation.mutationRandom(children[0], MUTATION_RATE);
+            calculateVariableMutation(children[0], set);
+            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, FIXED_OMEGA_RATE);
+//            children[0] = Mutation.mutationRandom(children[0], MUTATION_RATE);
             offspringPopulation[i] = children[0];
 
             if (i + 1 < offspringPopulation.length) {
                 i++;
-//                calculateVariableMutation(children[1], set);
-//                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, variable_omega_rate);
-                children[1] = Mutation.mutationRandom(children[1], MUTATION_RATE);
+                calculateVariableMutation(children[1], set);
+                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, FIXED_OMEGA_RATE);
+//                children[1] = Mutation.mutationRandom(children[1], MUTATION_RATE);
                 offspringPopulation[i] = children[1];
             }
         }
@@ -304,14 +308,14 @@ public class GAFloat {
         Scanner scan = new Scanner(System.in); //used for debugging
         int numberOfGenerations = 0;
         boolean stopCondition = false;
-        Dataset set[];
+        Dataset set[] = dataset;
         while (!stopCondition && numberOfGenerations < NUMBER_OF_GENERATIONS) {
 
             //populations are not sorted
             parentPopulationSorted = offspringPopulationSorted = false;
 
             //every 10 generations we want to test on testingset
-            if (numberOfGenerations % 100 == 0) {
+            if (numberOfGenerations % 10 == 0) {
                 set = testingSet;
             } else {
                 set = trainingSet;
@@ -324,7 +328,8 @@ public class GAFloat {
             generateOffspring(set);
 
             /* Show Best Fitness */
-            showBestFitness();
+//            showBestFitness();
+            System.out.println("Best Fitness: " + bestIndividual.getFitness() + " Generations: " + numberOfGenerations);
             if (set == testingSet) {
                 System.out.println("*");
             }

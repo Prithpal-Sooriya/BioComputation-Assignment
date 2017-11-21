@@ -69,6 +69,20 @@ TODO COMPLETE:
   - clean data/reduce data
   - dimensional reduction
 
+- [x] Task3: blend crossover
+- [x] Task3: when bounds become <0 || >1
+  - [x] could limit bounds to be at 0 or 1 (however after running it with this, all bounds become stuck at 0 and 1)]
+  - [x] could "bounce" the bounds back in
+    - so `if(min-creep < 0) min+creep;` --> what if min = 0.5 and creep = 0.56 (then stuck..)
+  - [x] could let bounds "phase" and revalidate bounds (out bottom/0, in top/1)
+    - `min-creep; if(min<0) 1 + min;` //as min becomes -ve then just add to 1
+  - [x] could to an "absolute" on 0 and 1
+    - `min-creep; if(min<0) min = -min; if(min>1) min -=1;`
+
+- NOTE: Larry said keep it simple
+  - normal crossover
+  - relatively high omega offset (for mutation)
+  - ...
 ------------------------------------------------
 
 TODO NOT DONE:
@@ -79,15 +93,7 @@ TODO NOT DONE:
 - Add in weights (this is extra stuff... may do this)
   - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
 
-- [x] Task3: blend crossover
-- [x] Task3: when bounds become <0 || >1
-  - [x] could limit bounds to be at 0 or 1 (however after running it with this, all bounds become stuck at 0 and 1)]
-  - [x] could "bounce" the bounds back in
-    - so `if(min-creep < 0) min+creep;` --> what if min = 0.5 and creep = 0.56 (then stuck..)
-  - [x] could let bounds "phase" and revalidate bounds (out bottom/0, in top/1)
-    - `min-creep; if(min<0) 1 + min;` //as min becomes -ve then just add to 1
-  - [x] could to an "absolute" on 0 and 1
-    - `min-creep; if(min<0) min = -min; if(min>1) min -=1;`
+
 
 
 ------------------------------------------
