@@ -22,8 +22,8 @@ public class Mutation {
                     float lowerBound = newRule.getBoundFromIndex(j).getLowerbound();
                     float upperBound = newRule.getBoundFromIndex(j).getUpperbound();
                     
-                    lowerBound += Math.random()>50 ? Math.random()*OMEGA : -Math.random()*OMEGA;
-                    upperBound += Math.random()>50 ? Math.random()*OMEGA : -Math.random()*OMEGA;
+                    lowerBound += Math.random()>0.50 ? Math.random()*OMEGA : -Math.random()*OMEGA;
+                    upperBound += Math.random()>0.50 ? Math.random()*OMEGA : -Math.random()*OMEGA;
                     newRule.getBoundFromIndex(j).setLowerbound(lowerBound);
                     newRule.getBoundFromIndex(j).setUpperbound(upperBound);
                     
