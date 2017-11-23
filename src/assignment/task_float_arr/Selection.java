@@ -35,6 +35,12 @@ public class Selection {
         
         double stop = rand.nextDouble();
         
+        //hopefully totalFitness is not 0... if it is we will set it to 1
+        if(totalFitness == 0) {
+            System.out.println("total fitness = 0");
+            totalFitness = 1;
+        }
+        
         for (Individual individual : population) {
             stop -= individual.getFitness()/totalFitness;
             
@@ -43,7 +49,7 @@ public class Selection {
             }
         }
         
-        //worst case return the first ind in pop
-        return new Individual(population[0]);
+        //new worst case = tornament selection
+        return tornamentSelection(population);
     }
 }

@@ -26,11 +26,12 @@ public class FitnessFunction {
 
                 //eval conditions
                 boolean allMatched = true;
-                for (int k = 0; k < fs.length - 1; k++) { //loop through each part of rule
+                for (int k = 0; k < fs.length-1; k++) { //loop through each part of rule
                     float value = fs[k];
                     //offset--> [j][k*2]
-                    float lowerBound = individual.getGenes()[j][k * 2];
-                    float upperBound = individual.getGenes()[j][(k * 2)+1];
+                    int offset = k*2;
+                    float lowerBound = individual.getGenes()[j][offset];
+                    float upperBound = individual.getGenes()[j][offset+1];
                     if (!(lowerBound <= value && value <= upperBound)) {
                         allMatched = false;
                         break;
@@ -42,7 +43,6 @@ public class FitnessFunction {
                     if (individual.getGenes()[j][individual.getGenes()[j].length-1]
                             == fs[fs.length - 1]) {
                         tempFitness++;
-//                        System.out.println("yee");
                     }
                     break; //go to next rule to eval
                 }

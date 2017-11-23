@@ -188,12 +188,18 @@ public class GAFloat {
             }
         }
         
-        FitnessFunction.compareRulesAll(set, parentPopulation);
-        FitnessFunction.compareRulesAll(set, offspringPopulation);
-
-        sortPopulations();
+//        for (int i = 0; i < parentPopulation.length; i++) {
+//            parentPopulation[i].evaluate(dataset);
+//            offspringPopulation[i].evaluate(dataset);
+//            
+//        }
         
-        swapWorstForBest();
+//        FitnessFunction.compareRulesAll(set, parentPopulation);
+//        FitnessFunction.compareRulesAll(set, offspringPopulation);
+
+//        sortPopulations();
+        
+//        swapWorstForBest();
         
         /* Set best ind in the offspring pop */
         getBestIndividualNoSort();
@@ -278,11 +284,11 @@ public class GAFloat {
             }
             
             /* Fitness function on parents */
-//            for (int i = 0; i < parentPopulation.length; i++) {
-//                parentPopulation[i].evaluate(set);
-//            }
+            for (int i = 0; i < parentPopulation.length; i++) {
+                parentPopulation[i].evaluate(set);
+            }
 
-            FitnessFunction.compareRulesAll(set, parentPopulation);
+//            FitnessFunction.compareRulesAll(set, parentPopulation);
 
             /* Generate offspring */
             generatOffspring(set);

@@ -18,12 +18,13 @@ public class Individual {
     private int conditionLength;
     private int outputLength;
     private double fitness;
+    private int totalLength;
 
     public Individual(int GENE_LENGTH, int CONDITION_LENGTH, int outputLength) {
         this.geneLength = GENE_LENGTH;
         this.conditionLength = CONDITION_LENGTH;
         this.outputLength = outputLength;
-        int totalLength = (conditionLength * 2) + outputLength;
+        this.totalLength = (conditionLength * 2) + outputLength;
         this.fitness = 0;
         this.genes = new float[geneLength][totalLength];
         randomiseGenes();
@@ -31,13 +32,21 @@ public class Individual {
     }
 
     public Individual(Individual clone) {
-        this.genes = clone.getGenes();
+        //WHEN COPYING OVER GENES, I NEED TO ENSURE THAT WE ARE NOT COPYING REFERENCE
+        this.geneLength = clone.getGeneLength();
+        this.totalLength = clone.getTotalLength();
+        float[][] newGenes = new float[this.geneLength][this.totalLength];
+        for (int i = 0; i < newGenes.length; i++) {
+            for (int j = 0; j < newGenes[i].length; j++) {
+                newGenes[i][j] = clone.getGenes()[i][j]; //.getGenes() adds extra unnessary function
+
+            }
+        }
+        this.genes = newGenes;
         this.geneLength = clone.getGeneLength();
         this.conditionLength = clone.getConditionLength();
         this.outputLength = clone.getOutputLength();
         this.fitness = clone.getFitness();
-
-        organiseBounds();
     }
 
     public void randomiseGenes() {
@@ -64,23 +73,22 @@ public class Individual {
                 genes[i][offset] = lowerBound;
                 genes[i][offset + 1] = upperBound;
             }
-
         }
     }
 
     public void evaluate(float[][] dataset) {
-        this.fitness = 0;
+        double tempFitness = 0;
         for (int i = 0; i < dataset.length; i++) { //loop through rules
             float[] fs = dataset[i];
             for (int j = 0; j < genes.length; j++) { //loop through each gene
-
                 //eval conditions
                 boolean allMatched = true;
                 for (int k = 0; k < fs.length - outputLength; k++) { //loop through each part of rule
                     float value = fs[k];
                     //offset--> [j][k*2]
-                    float lowerBound = genes[j][k * 2];
-                    float upperBound = genes[j][(k * 2) + 1];
+                    int offset = k * 2;
+                    float lowerBound = genes[j][offset];
+                    float upperBound = genes[j][offset + 1];
                     if (!(lowerBound <= value && value <= upperBound)) {
                         allMatched = false;
                         break;
@@ -89,14 +97,16 @@ public class Individual {
 
                 //eval all conditions and output
                 if (allMatched) {
-                    if (genes[j][genes[j].length - 1] == fs[fs.length - 1]) {
-                        this.fitness++;
+                    if (genes[j][this.totalLength - 1] == fs[fs.length - 1]) {
+                        tempFitness++;
                     }
                     break; //go to next rule to eval
                 }
             }
         }
 
+        //set individuals new fitness
+        this.fitness = tempFitness;
     }
 
     public void mutationCreepConditions(double MUTATION_RATE, double OMEGA_OFFSET) {
@@ -110,8 +120,8 @@ public class Individual {
                     lowerBound += Math.random() > 0.5 ? Math.random() * OMEGA_OFFSET : -Math.random() * OMEGA_OFFSET;
                     upperBound += Math.random() > 0.5 ? Math.random() * OMEGA_OFFSET : -Math.random() * OMEGA_OFFSET;
 
-                    lowerBound = phaseBound(lowerBound);
-                    upperBound = phaseBound(upperBound);
+                    lowerBound = endBound(lowerBound);
+                    upperBound = endBound(upperBound);
 
                     genes[i][offset] = Math.min(lowerBound, upperBound);
                     genes[i][offset + 1] = Math.max(lowerBound, upperBound);
@@ -120,12 +130,44 @@ public class Individual {
         }
     }
 
+    //this version will perform creep on 1 bound at a time
+    //so in some cases, only the lower/upper bound will be creeped :D
+    public void mutationCreepConditionsV2(double MUTATION_RATE, double OMEGA_OFFSET) {
+        for (int i = 0; i < genes.length; i++) { //loop through genes
+            for (int j = 0; j < genes.length - outputLength; j++) { //loop through each bound
+                if (MUTATION_RATE > Math.random()) {
+                    float newValue = genes[i][j];
+                    float creep = (float) (Math.random() * OMEGA_OFFSET);
+                    newValue += Math.random() > 0.5 ? creep : -creep;
+
+                    newValue = endBound(newValue);
+
+                    genes[i][j] = newValue;
+                }
+            }
+        }
+
+        //will need to reorganise bounds
+        organiseBounds();
+    }
+
     public void mutationOutput(double MUTATION_RATE) {
         for (int i = 0; i < genes.length; i++) {
             if (MUTATION_RATE > Math.random()) {
                 //bit flip
                 genes[i][genes[i].length - 1] = (int) genes[i][genes[i].length - 1] ^ 1;
             }
+        }
+    }
+
+    private float endBound(float newValue) {
+        if (newValue < 0) {
+            return 0;
+        }
+        if (newValue > 1) {
+            return 1;
+        } else {
+            return newValue;
         }
     }
 
@@ -183,6 +225,14 @@ public class Individual {
 
     public void setFitness(double fitness) {
         this.fitness = fitness;
+    }
+
+    public int getTotalLength() {
+        return totalLength;
+    }
+
+    public void setTotalLength(int totalLength) {
+        this.totalLength = totalLength;
     }
 
 }
