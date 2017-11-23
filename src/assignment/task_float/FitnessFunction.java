@@ -99,7 +99,7 @@ public class FitnessFunction {
         individual.setFitness(tempFitness);
         
         //return a clone of this (to prevent array weirdness)
-        return Individual.clone(individual);
+        return new Individual(individual);
     }
 
     public static void convertFitnessQuadraticAll(Individual[] population, int exponent) {

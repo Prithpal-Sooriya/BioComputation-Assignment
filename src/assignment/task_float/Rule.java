@@ -45,6 +45,19 @@ public class Rule {
         output = new Random().nextInt(2);
     }
     
+    /*
+    This is a function that will be used to allow cloning
+    This is to prevent 2 rules using the same reference
+    */
+    public Rule(Rule clone) {
+        this.output = clone.getOutput();
+//        this.bounds = clone.getBounds(); //this will not work as this is copying by reference!
+        this.bounds = new Bound[clone.getBoundsLength()];
+        for (int i = 0; i < bounds.length; i++) {
+            bounds[i] = new Bound(clone.getBoundFromIndex(i));
+        }
+    }
+    
     //setters and getters
     public Bound getBoundFromIndex(int i) {
         if(i >= bounds.length || i < 0) {

@@ -20,7 +20,6 @@ public class Bound {
         this.upperbound = upperbound;
 
 //        validateBounds();
-
     }
 
     //constructor with no bounds given, so randomises bounds
@@ -29,6 +28,15 @@ public class Bound {
         this.upperbound = (float) Math.random();
 
         validateBounds();
+    }
+
+    /*
+    constructor that will allow cloning
+    this is used so we can prevent copying Bound by reference!
+     */
+    public Bound(Bound clone) {
+        this.lowerbound = clone.getLowerbound();
+        this.upperbound = clone.getUpperbound();
     }
 
     /*
@@ -49,6 +57,16 @@ public class Bound {
     }
 
     //methods to handle bounds
+    private float endBound(float bound) {
+        if (bound < 0) {
+            return 0;
+        }
+        if (bound > 1) {
+            return 1;
+        }
+        return bound;
+    }
+
     private float bounceBound(float bound, float creep) {
         //creep approches 0 or 1 even if you flip the sign (e.g. bound = 0.5, creep = 0.51)
         if (bound + creep > 1 && bound - creep < 0) {
@@ -65,7 +83,7 @@ public class Bound {
         }
 
         //all okay, we don't need to "bounce"
-        return bound+creep;
+        return bound + creep;
     }
 
     /*
@@ -90,19 +108,19 @@ public class Bound {
 
     private float absBound(float bound, float creep) {
         float tempBound = bound + creep;
-        if(tempBound < 0) {
+        if (tempBound < 0) {
             return Math.abs(tempBound);
         }
-        if(tempBound > 1) {
+        if (tempBound > 1) {
             /*
             -0.2 --> 0.2 --> -0.2 + 0.4 = 0.2
             -0.4 --> 0.4 --> -0.4 + 0.8 = 0.4
             SO
             1.2 --> ? --> 1.2 - 0.4 = 0.8
             1.4 --> ? --> 1.4 - 0.8 = 0.6
-            */
+             */
             float diff = 1 - tempBound;
-            return tempBound - (diff*2);
+            return tempBound - (diff * 2);
         }
         //all okay, we did not need to abs
         return tempBound;
@@ -115,8 +133,9 @@ public class Bound {
 
     public void setLowerbound(float lowerbound) {
         //find out the creep!
-        float creep = lowerbound - this.lowerbound;
-        this.lowerbound = phaseBound(lowerbound, creep);
+//        float creep = lowerbound - this.lowerbound;
+//        this.lowerbound = phaseBound(lowerbound, creep);
+        this.lowerbound = endBound(lowerbound);
     }
 
     public float getUpperbound() {
@@ -125,8 +144,9 @@ public class Bound {
 
     public void setUpperbound(float upperbound) {
         //find out creep!
-        float creep = upperbound - this.upperbound;
-        this.upperbound = phaseBound(upperbound, creep);
+//        float creep = upperbound - this.upperbound;
+//        this.upperbound = phaseBound(upperbound, creep);
+        this.upperbound = endBound(upperbound);
     }
 
     @Override

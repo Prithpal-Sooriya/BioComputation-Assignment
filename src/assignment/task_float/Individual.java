@@ -36,12 +36,28 @@ public class Individual {
     }
     
     /*
+    This will create a new individual using the same values as the parent
+    To prevent some issues (like copying reference) I will need to use .clone, or some other method
+    */
+    public Individual(Individual clone) {
+        this.fitness = clone.getFitness();
+        this.normalisedFitness = clone.getNormalisedFitness();
+//        this.genes = clone.getGenes(); //this will be invalid, as this is copying reference!
+        this.genes = new Rule[clone.getGeneLength()];
+        for (int i = 0; i < genes.length; i++) {
+            genes[i] = new Rule(clone.getGeneFromIndex(i));
+        }
+    }
+    
+    
+    /*
     clone function
     
     This is used to prevent wierdness from using Object[] which contains
     Object[] which contains ....
     
     I could use deepClone, but thought I might just make my own :P
+    EDIT: this clone funtion is quite computationally expensive (like by alot XD)
     */
     public static Individual clone(Individual ind) {
         Rule[] genes = new Rule[ind.getGeneLength()];

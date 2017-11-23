@@ -22,7 +22,7 @@ public class GAFloat {
     private static final int POPULATION_SIZE = 200;
     private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
     private static final double CROSSOVER_RATE = 0.9;
-    private static final double BLEND_CROSSOVER_RATE = 0.6;
+    private static final double BLEND_CROSSOVER_RATE = 0.4;
     private static final double MUTATION_RATE = 0.01; //1/popsize to 1/chromosomelength
     private static final double FIXED_OMEGA_RATE = 0.3;
     private static final int NUMBER_OF_GENERATIONS = 3000;
@@ -133,10 +133,11 @@ public class GAFloat {
         /*
         find location of where to start subarray swap
         - maybe limit how much of the old generation I should keep (so it isnt a full clone of the parent!)
-        - maybe limit to 3 best parents for 3 worst offspring
+        - maybe limit to 3 best parents for 3 worst offspring --> limit to 10% parents?
         */
         int offset = 0;
-        for (int i = 0; i < 4; i++) {
+        int percentOfParents = (parentPopulation.length/100)*10;
+        for (int i = 0; i < percentOfParents; i++) {
             if (parentPopulation[parentPopulation.length - 1].getFitness() > offspringPopulation[i].getFitness()) {
                 offset++;
             } else {
@@ -147,7 +148,7 @@ public class GAFloat {
         /* commence swap */
         for (int i = 0; i < offset; i++) {
             int parentIndex = parentPopulation.length - offset + i; //checked, this index is correct
-            offspringPopulation[i] = Individual.clone(parentPopulation[parentIndex]);
+            offspringPopulation[i] = new Individual(parentPopulation[parentIndex]);
         }
     }
 
@@ -158,7 +159,7 @@ public class GAFloat {
         }
 
         //last individual = best fitness
-        bestIndividual = Individual.clone(offspringPopulation[POPULATION_SIZE - 1]);
+        bestIndividual = new Individual(offspringPopulation[POPULATION_SIZE - 1]);
     }
 
     private void showAverageFitness(Individual[] population) {
@@ -178,6 +179,7 @@ public class GAFloat {
         int numberOfCorrectRules = 0;
         int numberOfCorrectConditions = 0;
         for (Dataset set : testingSet) { //loop through testing set
+            numberOfCorrectConditions = 0;
             for (Rule gene : bestIndividual.getGenes()) { //loop through genes
                 for (int i = 0; i < gene.getBoundsLength(); i++) {
                     /* bounds length = set conditions length */
@@ -210,7 +212,7 @@ public class GAFloat {
          */
         Individual[] parentPopulationCopy = new Individual[POPULATION_SIZE];
         for (int i = 0; i < parentPopulationCopy.length; i++) {
-            parentPopulationCopy[i] = Individual.clone(parentPopulation[i]);
+            parentPopulationCopy[i] = new Individual(parentPopulation[i]);
         }
 
         /* Fitness Function Improve */
@@ -232,8 +234,8 @@ public class GAFloat {
             
             Think about replacing this with blending crossover
              */
-            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
-//            Individual[] children = Crossover.blendCrossover(parents[0], parents[1], BLEND_CROSSOVER_RATE);
+//            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
+            Individual[] children = Crossover.blendCrossover(parents[0], parents[1], BLEND_CROSSOVER_RATE);
 
             /* Mutation */
  /*
@@ -250,14 +252,14 @@ public class GAFloat {
                 - omega = 0.5 - ((#correct/total)*0.5) //so we restrict to max of 0.5 leaps in bounds
              */
             calculateVariableMutation(children[0], set);
-            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, FIXED_OMEGA_RATE);
+            children[0] = Mutation.mutationCreepAndOutputV2(children[0], MUTATION_RATE, FIXED_OMEGA_RATE);
 //            children[0] = Mutation.mutationRandom(children[0], MUTATION_RATE);
             offspringPopulation[i] = children[0];
 
             if (i + 1 < offspringPopulation.length) {
                 i++;
                 calculateVariableMutation(children[1], set);
-                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, FIXED_OMEGA_RATE);
+                children[1] = Mutation.mutationCreepAndOutputV2(children[1], MUTATION_RATE, FIXED_OMEGA_RATE);
 //                children[1] = Mutation.mutationRandom(children[1], MUTATION_RATE);
                 offspringPopulation[i] = children[1];
             }
@@ -265,7 +267,7 @@ public class GAFloat {
 
         /* pre-subarray swap */
         FitnessFunction.fitnessFunctionCompareRulesAll(set, offspringPopulation);
-        FitnessFunction.fitnessFunctionCompareRulesAll(set, parentPopulation); //this line may be redundant (since we never touched the parent, only the parent copy)
+//        FitnessFunction.fitnessFunctionCompareRulesAll(set, parentPopulation); //this line may be redundant (since we never touched the parent, only the parent copy)
 
         sortPopulations();
 
@@ -286,7 +288,7 @@ public class GAFloat {
 
     private void copyChildrenToParents(Individual[] offSpringPopulation, Individual[] parentPopulation) {
         for (int i = 0; i < parentPopulation.length; i++) {
-            parentPopulation[i] = Individual.clone(offSpringPopulation[i]);
+            parentPopulation[i] = new Individual(offSpringPopulation[i]);
         }
     }
 
