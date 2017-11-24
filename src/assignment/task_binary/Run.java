@@ -13,7 +13,7 @@ public class Run {
 
     public static void main(String[] args) {
 
-        GABool run = new GABool("data2.txt");
+        GABool run = new GABool("data2.txt", "./src/Files/data2","Data2-pop100-gene5-cross09-mut004v3.csv");
         run.setPopulationSize(100);
         run.setChromosomeLength(5);
         run.setCrossoverRate(0.9);

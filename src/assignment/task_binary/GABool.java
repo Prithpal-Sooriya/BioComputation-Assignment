@@ -5,9 +5,12 @@
  */
 package assignment.task_binary;
 
+import assignment.Outcomes.CSVFileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,6 +34,9 @@ public class GABool {
     private String inputFileDir;
     private Rule[] dataset;
 
+    //used for writing to file
+    CSVFileWriter out;
+
     //populations
     private Individual[] parentPopulation;
     private Individual[] offspringPopulation;
@@ -49,13 +55,15 @@ public class GABool {
       - crossover rate = 0.9
       - mutation rate = 0.03 (1/pop size to 1/chromosome length)
      */
-    public GABool(String inputFileName) {
+    public GABool(String inputFileName, String csvFileDir, String csvFileName) {
         if (inputFileName.equalsIgnoreCase("data1.txt")) {
             inputFileDir = "/Files/data1.txt";
         }
         if (inputFileName.equalsIgnoreCase("data2.txt")) {
             inputFileDir = "/Files/data2.txt";
         }
+        out = new CSVFileWriter(csvFileDir, csvFileName, "worst,averge,best");
+
         POPULATION_SIZE = 25;
         CHROMOSOME_LENGTH = 32;
         CROSSOVER_RATE = 0.9;
@@ -177,7 +185,7 @@ public class GABool {
 
         /* commence swap */
 //        System.arraycopy(parentPopulation, parentPopulation.length-offset, offspringPopulation, 0, offset);
- /*
+        /*
         NOTE: might be better to swap the genes and fitness rather than the whole
               Individual object (ran into issues last time this happened...)
          */
@@ -204,39 +212,39 @@ public class GABool {
     /*
     get average fitness
     This can be used to get average fitness of parent or children
-    */
-    private void showAverageFitness(Individual[] population){
+     */
+    private void showAverageFitness(Individual[] population) {
         double totalFitness = 0;
         for (Individual individual : population) {
             totalFitness += individual.getFitness();
         }
-        
-        System.out.println("Average Fitness: " + (totalFitness/population.length));
+
+        System.out.println("Average Fitness: " + (totalFitness / population.length));
     }
-    
+
     /*
     shows best fitness
     shows best fitness of parent population of child population
     REDUNDANT
-    */
+     */
     private void showBestFitness(Individual[] population) {
         double bestFitness = 0;
         for (Individual individual : population) {
-            if(individual.getFitness() > bestFitness) {
+            if (individual.getFitness() > bestFitness) {
                 bestFitness = individual.getFitness();
             }
         }
         System.out.println("Best Fitness: " + bestFitness);
     }
-    
+
     /*
     shows best fitness
     uses the bestIndividual to show best fitness
-    */
-    private void showBestFitness(){
+     */
+    private void showBestFitness() {
         System.out.println("Best Fitness: " + bestIndividual.getFitness());
     }
-    
+
     /*
     stop condition for stopping the GA (found best solution)
     will be evaluating the best individual (as they will have the most rules correct)
@@ -258,7 +266,7 @@ public class GABool {
                     }
                 }
                 if (counter == rule.getConditionLength()) {
-                    if(gene.getOutput() == rule.getOutput()){
+                    if (gene.getOutput() == rule.getOutput()) {
                         numberOfCorrectRules++; //the whole rule is correct!
                     }
                     break; //go to next rule to test, even if the whole rule was not correct
@@ -317,15 +325,15 @@ public class GABool {
 
         //perform sub array swap
         swapWorstForBest();
-        
+
         //set best individual
         setBestIndividual();
-        
+
     }
-    
+
     private void copyChildrenToParents(Individual[] offspringPopulation, Individual parentPopulation[]) {
 //        System.arraycopy(parentPopulation, 0, offspringPopulation, 0, POPULATION_SIZE);
-          for (int i = 0; i < parentPopulation.length; i++) {
+        for (int i = 0; i < parentPopulation.length; i++) {
             parentPopulation[i] = Individual.clone(offspringPopulation[i]);
         }
     }
@@ -351,25 +359,44 @@ public class GABool {
         Scanner scan = new Scanner(System.in); //we can use this to examine every 1000th generation
         int numberOfGenerations = 0;
         boolean stopCondition = false;
-        while (!stopCondition && numberOfGenerations < 1000) {
+        double worstFitness, averageFitness, bestFitness;
+
+        while (numberOfGenerations < 1000) {
 
             //the fitness's of the offspring and children are not ordered anymore
             parentPopulationSorted = offspringPopulationSorted = false;
 
             //calc fitness of parent pop
             FitnessFunction.fitnessFunctionCompareRulesAll(dataset, parentPopulation);
+            if (numberOfGenerations == 0) {
+                worstFitness = getWorstFitness(parentPopulation);
+                averageFitness = getAverageFitness(parentPopulation);
+                bestFitness = getBestFitness(parentPopulation, true);
+                out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+            }
 
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(GABool.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+            
             //generate offspring
             generateOffspring();
-            
-            System.out.println(parentPopulation[parentPopulation.length-1].getFitness());
+
+//            System.out.println(parentPopulation[parentPopulation.length-1].getFitness());
             //show stats
             showBestFitness();
-            
-            
+
+            //write to csv
+            worstFitness = getWorstFitness(offspringPopulation);
+            averageFitness = getAverageFitness(offspringPopulation);
+            bestFitness = getBestFitness(offspringPopulation, false);
+            out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+
             //evaluate stop condition
             stopCondition = stopCondition(dataset, bestIndividual);
-            
+
             /* set next generation */
             //need to set the children to be the next parents
 //            for (int i = 0; i < parentPopulation.length; i++) {
@@ -377,19 +404,59 @@ public class GABool {
 //                parentPopulation[i].setFitness(offspringPopulation[i].getFitness());
 //            }
             copyChildrenToParents(offspringPopulation, parentPopulation);
-            
+
             //increment generations
             numberOfGenerations++;
         }
-        
+
         /*
         If we have broken out of the loop above, we need to show the best individual
-        */
+         */
         System.out.println("Stopped!");
         System.out.println("Number Of Generations: " + numberOfGenerations);
         bestIndividual = FitnessFunction.fitnessFunctionCompareRulesSingle(trainingSet, bestIndividual);
         System.out.println(bestIndividual.toString());
+        //close the file writer to end print out anything saved in it
+        out.close();
 
     }
+
+    /*
+    Methods down here are used to write to the file!
+    - getWorstFitness
+    - getAverageFitness
+    - getBestFitness
+     */
+    private double getWorstFitness(Individual[] population) {
+        double worst = population[0].getFitness();
+        for (int i = 1; i < population.length; i++) {
+            if (population[i].getFitness() < worst) {
+                worst = population[i].getFitness();
+            }
+        }
+        return worst;
+    }
+
+    private double getAverageFitness(Individual[] population) {
+        double averageFitness = 0;
+        for (Individual individual : population) {
+            averageFitness += individual.getFitness();
+        }
+        averageFitness /= population.length;
+        return averageFitness;
+    }
+
+    private double getBestFitness(Individual[] population, boolean initial) {
+        //return if initial population
+        if (initial) {
+            double bestFitness = 0;
+            for (Individual individual : population) {
+                if (individual.getFitness() > bestFitness) {
+                    bestFitness = individual.getFitness();
+                }
+            }
+            return bestFitness;
+        }
+        return bestIndividual.getFitness();
+    }
 }
-   
