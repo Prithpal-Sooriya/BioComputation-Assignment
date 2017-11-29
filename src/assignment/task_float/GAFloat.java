@@ -308,14 +308,14 @@ public class GAFloat {
                 - omega = 0.5 - ((#correct/total)*0.5) //so we restrict to max of 0.5 leaps in bounds
              */
             calculateVariableMutation(children[0], set);
-            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, variable_omega_rate);
+            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, FIXED_OMEGA_RATE);
 //            children[0] = Mutation.mutationRandom(children[0], MUTATION_RATE);
             offspringPopulation[i] = children[0];
 
             if (i + 1 < offspringPopulation.length) {
                 i++;
                 calculateVariableMutation(children[1], set);
-                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, variable_omega_rate);
+                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, FIXED_OMEGA_RATE);
 //                children[1] = Mutation.mutationRandom(children[1], MUTATION_RATE);
                 offspringPopulation[i] = children[1];
             }

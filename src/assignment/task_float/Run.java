@@ -14,7 +14,7 @@ public class Run {
     /*run method for the GAFLoat*/
     public static void main(String[] args) {
         
-        GAFloat run = new GAFloat("data3.txt", "./src/Files/data3", "Data2-pop200-gene10-cross09-mut001-CREEP-VARIABLEv5.csv");
+        GAFloat run = new GAFloat("data3.txt", "./src/Files/data3", "Data3-pop200-gene10-cross09-mut001v5.csv");
         
         GAFloat.setPOPULATION_SIZE(200);
         GAFloat.setCHROMOSOME_LENGTH(10);
@@ -22,7 +22,7 @@ public class Run {
         GAFloat.setBLEND_CROSSOVER_RATE(0.6);
         GAFloat.setMUTATION_RATE(0.01);
         GAFloat.setFIXED_OMEGA_RATE(0.3);
-        GAFloat.setNUMBER_OF_GENERATIONS(1000);
+        GAFloat.setNUMBER_OF_GENERATIONS(3000);
         
         run.run();
     }
