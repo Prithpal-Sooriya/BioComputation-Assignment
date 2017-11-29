@@ -5,6 +5,7 @@
  */
 package assignment.task_float;
 
+import assignment.Outcomes.CSVFileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -17,16 +18,53 @@ public class GAFloat {
 
     //input file
     private String inputFileDir;
+    
+    //output to file
+    CSVFileWriter out;
+    boolean write = false;
 
     //HYPER PARAMETERS
-    private static final int POPULATION_SIZE = 200;
-    private static final int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
-    private static final double CROSSOVER_RATE = 0.9;
-    private static final double BLEND_CROSSOVER_RATE = 0.4;
-    private static final double MUTATION_RATE = 0.01; //1/popsize to 1/chromosomelength
-    private static final double FIXED_OMEGA_RATE = 0.3;
-    private static final int NUMBER_OF_GENERATIONS = 3000;
+    private static int POPULATION_SIZE = 200;
+    private static int CHROMOSOME_LENGTH = 10; //10 is one of the smallest rulesets that you can have..
+    private static double CROSSOVER_RATE = 0.9;
+    private static double BLEND_CROSSOVER_RATE = 0.4;
+    private static double MUTATION_RATE = 0.01; //1/popsize to 1/chromosomelength
+    private static double FIXED_OMEGA_RATE = 0.3;
+    private static int NUMBER_OF_GENERATIONS = 3000;
 
+    //hyper parameter setters
+    public static void setPOPULATION_SIZE(int POPULATION_SIZE) {
+        GAFloat.POPULATION_SIZE = POPULATION_SIZE;
+    }
+
+    public static void setCHROMOSOME_LENGTH(int CHROMOSOME_LENGTH) {
+        GAFloat.CHROMOSOME_LENGTH = CHROMOSOME_LENGTH;
+    }
+
+    public static void setCROSSOVER_RATE(double CROSSOVER_RATE) {
+        GAFloat.CROSSOVER_RATE = CROSSOVER_RATE;
+    }
+
+    public static void setBLEND_CROSSOVER_RATE(double BLEND_CROSSOVER_RATE) {
+        GAFloat.BLEND_CROSSOVER_RATE = BLEND_CROSSOVER_RATE;
+    }
+
+    public static void setMUTATION_RATE(double MUTATION_RATE) {
+        GAFloat.MUTATION_RATE = MUTATION_RATE;
+    }
+
+    public static void setFIXED_OMEGA_RATE(double FIXED_OMEGA_RATE) {
+        GAFloat.FIXED_OMEGA_RATE = FIXED_OMEGA_RATE;
+    }
+
+    public static void setNUMBER_OF_GENERATIONS(int NUMBER_OF_GENERATIONS) {
+        GAFloat.NUMBER_OF_GENERATIONS = NUMBER_OF_GENERATIONS;
+    }
+
+    public void setCONDITION_LENGTH(int CONDITION_LENGTH) {
+        this.CONDITION_LENGTH = CONDITION_LENGTH;
+    }
+    
     private static double variable_omega_rate;
 
 //    private int POPULATION_SIZE;
@@ -54,6 +92,20 @@ public class GAFloat {
         if (filename.equals("data3.txt")) {
             inputFileDir = "/Files/data3.txt";
         }
+        write = false;
+    }
+    
+    //constructor to allow writing to file
+    public GAFloat(String inputFileName, String csvFileDir, String csvFileName) {
+        if (inputFileName.equals("data3.txt")) {
+            inputFileDir = "/Files/data3.txt";
+        }
+        out = new CSVFileWriter(csvFileDir, csvFileName, "worst,averge,best");
+        write = true;
+        POPULATION_SIZE = 25;
+        CHROMOSOME_LENGTH = 32;
+        CROSSOVER_RATE = 0.9;
+        MUTATION_RATE = 0.03;
     }
 
     /*
@@ -311,7 +363,8 @@ public class GAFloat {
         int numberOfGenerations = 0;
         boolean stopCondition = false;
         Dataset set[] = dataset;
-        while (!stopCondition && numberOfGenerations < NUMBER_OF_GENERATIONS) {
+        double worstFitness, averageFitness, bestFitness;
+        while (numberOfGenerations < NUMBER_OF_GENERATIONS) {
 
             //populations are not sorted
             parentPopulationSorted = offspringPopulationSorted = false;
@@ -326,6 +379,16 @@ public class GAFloat {
             /* Fitness function on parents */
             FitnessFunction.fitnessFunctionCompareRulesAll(set, parentPopulation);
 
+            //output to file it initial
+            if(numberOfGenerations == 0) {
+                worstFitness = getWorstFitness(parentPopulation);
+                averageFitness = getAverageFitness(parentPopulation);
+                bestFitness = getBestFitness(parentPopulation, true);
+                if(write) {
+                    out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+                }
+            }
+            
             /* Generate offspring */
             generateOffspring(set);
 
@@ -336,6 +399,13 @@ public class GAFloat {
                 System.out.println("*");
             }
 
+            worstFitness = getWorstFitness(offspringPopulation);
+            averageFitness = getAverageFitness(offspringPopulation);
+            bestFitness = getBestFitness(offspringPopulation, false);
+            if (write) {
+                out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+            }
+            
             /* Evaluate stop condition */
             stopCondition = stopCondition(trainingSet, bestIndividual);
 
@@ -346,6 +416,10 @@ public class GAFloat {
             numberOfGenerations++;
         }
 
+        if (write) {
+            out.close();
+        }
+        
         /* Onct GA/Evolution has finished, lets test the best individual on testing set */
         System.out.println("Stopped");
         System.out.println("Number of Generations: " + numberOfGenerations);
@@ -357,6 +431,39 @@ public class GAFloat {
 
     }
 
+    private double getWorstFitness(Individual[] population) {
+        double worst = population[0].getFitness();
+        for (int i = 1; i < population.length; i++) {
+            if (population[i].getFitness() < worst) {
+                worst = population[i].getFitness();
+            }
+        }
+        return worst;
+    }
+    
+    private double getAverageFitness(Individual[] population) {
+        double averageFitness = 0;
+        for (Individual individual : population) {
+            averageFitness += individual.getFitness();
+        }
+        averageFitness /= population.length;
+        return averageFitness;
+    }
+    
+    private double getBestFitness(Individual[] population, boolean initial) {
+        //return if initial population
+        if (initial) {
+            double bestFitness = 0;
+            for (Individual individual : population) {
+                if (individual.getFitness() > bestFitness) {
+                    bestFitness = individual.getFitness();
+                }
+            }
+            return bestFitness;
+        }
+        return bestIndividual.getFitness();
+    }
+    
     public static void main(String[] args) {
 
         GAFloat ga = new GAFloat("data3.txt");

@@ -2,3 +2,28 @@ Experimentation dataset 2
 
 //data given
 Data given for this dataset is in the same form as dataset1.
+
+//changes made from dataset 1
+Fitness quadratic, fitness exponential, fitness bias towards best
+Fitness proportionate selection (roulette wheel), mutation v2 (might not need to test)
+Sorting populate, and swap part of generations
+
+pop 200, gene 5, crossover 0.9, mutation 0.01
+fitness 64
+[1, 1, 0, 2, 2, 2],0
+[0, 1, 2, 2, 0, 2],0
+[0, 0, 2, 2, 2, 0],0
+[1, 0, 2, 0, 2, 2],0
+[2, 2, 2, 2, 2, 2],1
+fitness 64
+[0, 0, 2, 2, 2, 0],0
+[1, 0, 2, 0, 2, 2],0
+[0, 1, 2, 2, 0, 2],0
+[1, 1, 0, 2, 2, 2],0
+[2, 2, 2, 2, 2, 2],1
+fitness 64
+[0, 1, 2, 2, 0, 2],0
+[1, 1, 0, 2, 2, 2],0
+[1, 0, 2, 0, 2, 2],0
+[0, 0, 2, 2, 2, 0],0
+[2, 2, 2, 2, 2, 2],1

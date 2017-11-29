@@ -64,5 +64,36 @@ ds1 - population 10, genes 5, crossover rate 0.9, mutation rate 0.01
 From dataset1, there x% of the rules were able to match with 10 genes, and y% of the rules were able to match with 5 genes.
 Only by having 50 genes in were we able to fully match the problem rule base/dataset given.
 
-The best Individual found (with the least number of rules) contained a rulebase of:
-RULEBASE.
+The best Individual found (with the least number of rules) contained a rulebase of: RULEBASE.
+
+Schema =
+Fitness 26 (10 genes)
+[0, 1, 1, 1, 1],1
+[1, 2, 2, 0, 1],0
+[1, 2, 2, 1, 0],1
+[0, 2, 2, 0, 0],0
+[0, 2, 2, 1, 1],0
+[2, 1, 0, 2, 2],1
+[0, 2, 0, 0, 0],0
+[2, 0, 1, 2, 2],1
+[0, 1, 0, 1, 1],1
+[2, 2, 2, 2, 2],0
+
+Fitness 24 (10 genes)
+[0, 0, 1, 1, 0],1
+[1, 1, 0, 0, 1],0
+[0, 1, 1, 0, 0],1
+[0, 0, 1, 0, 1],1
+[2, 1, 1, 1, 1],0
+[0, 2, 2, 2, 2],0
+[1, 0, 0, 1, 1],0
+[0, 1, 2, 0, 1],1
+[1, 0, 1, 0, 1],0
+[2, 2, 2, 2, 2],1
+
+Fitness 19 (5 genes)
+[0, 0, 2, 0, 2],0
+[0, 1, 2, 1, 2],0
+[0, 2, 0, 2, 1],1
+[2, 2, 1, 2, 0],1
+[2, 2, 2, 2, 2],0

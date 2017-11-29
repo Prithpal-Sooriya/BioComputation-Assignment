@@ -227,28 +227,6 @@ public class FitnessFunction {
     public static void convertFitnessQuadratic(Individual[] population, int exponent) {
         Scanner scan = new Scanner(System.in);
 
-//        for (int i = 0; i < population.length; i++) {
-//            Individual ind = population[i];
-//            double tempFitness = ind.getFitness();
-//            tempFitness = ind.getFitness();
-//
-////            System.out.println("before " + i + ": " + tempFitness);
-////            scan.nextLine();
-//            tempFitness = tempFitness * 2;
-////            System.out.println("After " + i + ": " + tempFitness);
-////            scan.nextLine();
-//            ind.setTempFitness(tempFitness);
-//            population[i] = ind;
-//        }
-//
-//        //then set the values into original fitness at the end? mitigate this issue of object mismatch
-//        for (int i = 0; i < population.length; i++) {
-//            System.out.println("before " + i + ": " + population[i].getFitness());
-//            population[i].setFitness(population[i].getTempFitness());
-//            System.out.println("After " + i + ": " + population[i].getFitness());
-//            scan.nextLine();
-//
-//        }
         //lets see if we split the function
         for (int i = 0; i < population.length; i++) {
 

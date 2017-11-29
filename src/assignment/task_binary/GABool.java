@@ -190,6 +190,9 @@ public class GABool {
 
         /* find location of where subarrays to swap */
         int offset = 0;
+        
+        //how much maximum to swap, x%
+        int swapMax = (int) ((double)(POPULATION_SIZE/100)*100);
         for (int i = 0; i < POPULATION_SIZE; i++) {
             if (parentPopulation[parentPopulation.length - 1].getFitness() > offspringPopulation[i].getFitness()) {
                 offset++;
@@ -302,21 +305,18 @@ public class GABool {
         //NOTE, Arrays.copyOf copies the reference/pointer of parentpopulation
         Individual[] parentPopulationCopy = new Individual[POPULATION_SIZE];
         for (int i = 0; i < parentPopulationCopy.length; i++) {
-            parentPopulationCopy[i] = Individual.clone(parentPopulation[i]);
-//            parentPopulationCopy[i] = new Individual(CHROMOSOME_LENGTH, CLASSIFIER_LENGTH);
-//            parentPopulationCopy[i].setGenes(parentPopulation[i].getGenes());
-//            parentPopulationCopy[i].setFitness(parentPopulation[i].getFitness()); 
+            parentPopulationCopy[i] = Individual.clone(parentPopulation[i]); 
         }
 
-//        FitnessFunction.convertFitnessQuadratic(parentPopulationCopy, 2);
-//        FitnessFunction.addFitnessBiasToHighest(parentPopulationCopy, 100);
+        FitnessFunction.convertFitnessQuadratic(parentPopulationCopy, 2);
+        FitnessFunction.addFitnessBiasToHighest(parentPopulationCopy, 100);
 
         /* Selection / Crossover / Mutation */
         for (int i = 0; i < offspringPopulation.length; i++) {
             /* Selection */
             Individual[] parents = new Individual[2];
-            parents[0] = Selection.tornamentSelection(parentPopulationCopy);
-            parents[1] = Selection.tornamentSelection(parentPopulationCopy);
+            parents[0] = Selection.fitnessProportionateSelection(parentPopulationCopy);
+            parents[1] = Selection.fitnessProportionateSelection(parentPopulationCopy);
 
             /* Crossover */
             //creates 2 children
@@ -336,10 +336,10 @@ public class GABool {
         FitnessFunction.fitnessFunctionCompareRulesAll(dataset, offspringPopulation);
 //        FitnessFunction.fitnessFunctionCompareRulesAll(dataset, parentPopulation);
         //sort fitness's of each population
-//        sortPopulations();
+        sortPopulations();
 
         //perform sub array swap
-//        swapWorstForBest();
+        swapWorstForBest();
 
         //set best individual
         setBestIndividual();
