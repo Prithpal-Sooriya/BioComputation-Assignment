@@ -13,12 +13,12 @@ public class Run {
 
     public static void main(String[] args) {
 
-        GABool run = new GABool("data2.txt", "./src/Files/data2","Data2-pop100-gene5-cross09-mut004v3.csv");
+        GABool run = new GABool("data1.txt", "./src/Files/data1","Data1-pop100-gene20-cross09-mut001v1.csv");
         run.setPopulationSize(100);
-        run.setChromosomeLength(5);
+        run.setChromosomeLength(20);
         run.setCrossoverRate(0.9);
-        run.setMutationRate(0.04);
-
+        run.setMutationRate(0.01);
+        
         run.run();
     }
 

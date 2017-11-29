@@ -157,7 +157,7 @@ public class GAFloat {
         System.out.println("Best Fitness: " + bestIndividual.getFitness());
     }
 
-    //no stop condition yet
+    //no stop condition needed
     private boolean stopCondition() {
         return false;
     }

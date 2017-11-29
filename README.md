@@ -93,6 +93,8 @@ TODO NOT DONE:
 - Add in weights (this is extra stuff... may do this)
   - where 1st rule for individual has weight of 1, and nth rule for individual has weight of N(length of genes)
 
+- WEKA for extra algorithms
+  - e.g. gradient descent, MLP/NN, J48, C4.5
 
 
 

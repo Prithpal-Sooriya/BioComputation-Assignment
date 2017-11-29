@@ -36,6 +36,7 @@ public class GABool {
 
     //used for writing to file
     CSVFileWriter out;
+    boolean write = false;
 
     //populations
     private Individual[] parentPopulation;
@@ -63,7 +64,21 @@ public class GABool {
             inputFileDir = "/Files/data2.txt";
         }
         out = new CSVFileWriter(csvFileDir, csvFileName, "worst,averge,best");
+        write = true;
+        POPULATION_SIZE = 25;
+        CHROMOSOME_LENGTH = 32;
+        CROSSOVER_RATE = 0.9;
+        MUTATION_RATE = 0.03;
+    }
 
+    /* Constructor that will allow writing to files*/
+    public GABool(String inputFileName) {
+        if (inputFileName.equalsIgnoreCase("data1.txt")) {
+            inputFileDir = "/Files/data1.txt";
+        }
+        if (inputFileName.equalsIgnoreCase("data2.txt")) {
+            inputFileDir = "/Files/data2.txt";
+        }
         POPULATION_SIZE = 25;
         CHROMOSOME_LENGTH = 32;
         CROSSOVER_RATE = 0.9;
@@ -372,7 +387,9 @@ public class GABool {
                 worstFitness = getWorstFitness(parentPopulation);
                 averageFitness = getAverageFitness(parentPopulation);
                 bestFitness = getBestFitness(parentPopulation, true);
-                out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+                if (write) {
+                    out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+                }
             }
 
 //            try {
@@ -380,7 +397,6 @@ public class GABool {
 //            } catch (InterruptedException ex) {
 //                Logger.getLogger(GABool.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-            
             //generate offspring
             generateOffspring();
 
@@ -392,7 +408,9 @@ public class GABool {
             worstFitness = getWorstFitness(offspringPopulation);
             averageFitness = getAverageFitness(offspringPopulation);
             bestFitness = getBestFitness(offspringPopulation, false);
-            out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+            if (write) {
+                out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+            }
 
             //evaluate stop condition
             stopCondition = stopCondition(dataset, bestIndividual);
@@ -417,8 +435,9 @@ public class GABool {
         bestIndividual = FitnessFunction.fitnessFunctionCompareRulesSingle(trainingSet, bestIndividual);
         System.out.println(bestIndividual.toString());
         //close the file writer to end print out anything saved in it
-        out.close();
-
+        if (write) {
+            out.close();
+        }
     }
 
     /*

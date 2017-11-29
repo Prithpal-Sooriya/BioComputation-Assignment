@@ -1,0 +1,53 @@
+Introduction
+- what is GA
+- task asked
+- approaches done
+
+Background research
+- what is evolutionary computing
+- uses of EC in datamining
+- lit review
+
+Experimentation (ds1)
+- task/data given
+- how to formulate a geneotype
+- describe basic GA
+  - pseudo code
+  - fitness function, selection (tornament), crossover (single point), mutation (bitswap/generics) --> basic version
+- hyper parameters
+  - generate graphs on hyper parameters given.
+  - Present your results as averaged behaviour over more than one run
+    - each line on graph = hyper parameter
+    - each line = multiple averages of a run
+- Reasoning in what happens when changing hyper parameter
+- What was the schema you get
+
+Experimentation (ds2)
+- task/data given
+- genotype formulated
+- describe the more complex GA
+  - pseudo code
+  - fitness function (exponential/quadratic, bias), selection (fitness proportionate selection/roulette wheel), crossover (single point), mutation (same) --> more complex version
+  - reasoning in more complex GA
+- hyper parameters
+  - generate graphs on hyper parameters given
+  - Present your results as averaged behaviour over more than one run
+    - each line on graph = different hyper parameters (diff color)
+    - each line = multiple averages of a run
+- Reasoning in what happens when changing hyper parameters
+- What schema you get
+
+Experimentation (ds3)
+- task/data given
+- genotype formulated, explination why
+- describe GA
+  - psuedocode
+  - fitness function (exponential/quadratic, bias), selection (fitness proportionate selection/roulette wheel), crossover (single point vs blend), mutation (creep), sort and swap parts of each generations (to retain information from prev gen)
+  - reasoning in more complex GA
+- Hyper parameters
+  - generate graphs on hyper parameters given
+  - present your results as average behaviour over more than one run
+    - each line on graph = different hyperparameters
+    - each line = multiple averages of a run
+- Reasoning in what happens whe changing hyperparameters
+- What schema you get (this is hardish...)  

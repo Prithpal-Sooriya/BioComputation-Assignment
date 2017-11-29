@@ -1,0 +1,68 @@
+Experimentation (ds1)
+
+//what the first dataset given was
+For the first dataset example given, the dataset consists of a series of binary strings.
+Each binary string consisted of 5bits for a condition, and 1 bit for an output. So, for example, a line in the file (11001 0) can be seen as a condition is 11001 and the output is 0.
+
+//How GA works
+GA is a biological implementation of evolution to solve solutions given. Each individual contains genes (known as a genotype) and is an encoded version of a candidate solution to the problem given. This genotype/encoded design for the output will differ depending on the type of problem given.
+
+//genotype formulated
+A GA to be used with the dataset provided (and for the other datasets provided) would be a rule induction GA. Rule induction GA implements rules as the genotype for each individual of the population, and these individual's score (known as fitness) is dependent on how many rules it could/could not match from the given problem domain (the dataset provided). This idea given is the bases of the fitness function that all individuals in the population are evaluated against (as to give a ranking on which some individuals are better/fitter than others).
+
+//describe ga
+GA has a simple design, as shown from the pseudocode provided below.
+
+<provide pseudo code>
+
+As the psuedocode suggests (other than initializing and evaluating outside the loop), the main section that is important to GA is the repeating loop of selection, recombination, and mutation (+evaluation).
+Selection consists of picking individuals to be used in the mating pool (for the creation of the next generation).
+Recombination is used on each pair of parents. These methods for recombination is usually seen as crossover, where part of each parents genotype is swapped with one another.
+Mutation is done on these new individuals produced and finally these individuals are added for the next generation.
+
+//basic ga used
+For the version of GA given in this experiment:
+- Selection used was tournament selection, where 2 random individuals are picked and compared against each other. whichever individual that has the highest fitness is chosen. This process is repeated until the mating pool is filled.
+- Single point crossover, where 2 individuals from the mating pool will have a probability of crossing over their genes from a random pivot. If the probability of crossover is not met, then cloning will be done - doing this will increase the gene pool and allow higher variation.
+- Mutation occurs when the probability of a mutation of each bit of the genotype is met. Outputs are mutated by performing a bit flip (since the genotype consists of binary numbers), and conditions are mutated by either bit flip, or by adding a generic.
+  - Generics are special bits in the genotype, where they can matched with any bit (1 or 0) in the ruleset's corresponding bit. This is an important factor for ruleset induction GA's to allow smaller chromosome length to match more than 1 rule in the ruleset/problem domain.
+  - (MAYBE NOT TALK ABOUT THIS?) It also prevents "hard coded" individuals, where in which the individual will only match a training set and will perform bad on testing set.
+//maybe talk more about this?
+//hyper parameters to be used
+GA performance can significantly differ from the hyper parameters used. The code developed uses 4 main hyper parameters: population size, chromosome length, crossover rate and mutation rate. Tests below show the effects of changing these hyper parameters and how this effects the end solution created.
+
+//talk about the ideal values for crossover rate, and mutation rate
+There is an ideal value for the mutation rate and crossover rate hyper parameters.
+The mutation rate is usually between 1/population size and 1/genesize, so as to allow 1 mutation for every individual or every gene for an individual.
+The crossover rate is usually between 0.6-0.9. The reasoning for the lower bound for crossover rate is usually for problem domains where the crossover can detriment the candidate solutions (as crossover can be seen as explorative and moves individuals vastly around the search space).
+
+//TABLES: change in population size effects final solution
+
+ds1 - pop 10, genes 10, crossover rate 0.9, mutation rate 0.1.
+
+ds1 - pop 100, genes 10, crossover rate 0.9, mutation rate 0.01.
+
+ds1 - pop 200, genes 10, crossover rate 0.9, mutation rate 0.01.
+
+--> talk about how change in population size increases/decreases final solution.
+--> talk about how steep the graphs are
+  --> talk about increase pop size = larger variation and gene pool = faster to get to better solutions.
+--> talk about how at some point, chromosome length becomes the limiting factor of finding new solutions.
+
+//Tables: change in chromosome size
+--> talk about ideally, we want to decrease chromosome size --> so the least number of rules can match the most number of rules.
+  --> this is the idea of rule induction.
+
+ds1 - pop 10, genes 10, crossover rate 0.9, mutation rate 0.01.
+
+ds1 - pop 10, genes 50, crossover rate 0.9, mutation rate 0.01
+--> talk about how genes length > number of rules in problem set = hard coded!!
+
+ds1 - population 10, genes 5, crossover rate 0.9, mutation rate 0.01
+
+//talk about schema found
+From dataset1, there x% of the rules were able to match with 10 genes, and y% of the rules were able to match with 5 genes.
+Only by having 50 genes in were we able to fully match the problem rule base/dataset given.
+
+The best Individual found (with the least number of rules) contained a rulebase of:
+RULEBASE.
