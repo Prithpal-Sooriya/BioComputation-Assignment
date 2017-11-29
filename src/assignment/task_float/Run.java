@@ -11,4 +11,19 @@ package assignment.task_float;
  */
 public class Run {
     
+    /*run method for the GAFLoat*/
+    public static void main(String[] args) {
+        
+        GAFloat run = new GAFloat("data3.txt", "./src/Files/data3", "Data2-pop200-gene10-cross09-mut001-CREEP-VARIABLEv5.csv");
+        
+        GAFloat.setPOPULATION_SIZE(200);
+        GAFloat.setCHROMOSOME_LENGTH(10);
+        GAFloat.setCROSSOVER_RATE(0.7);
+        GAFloat.setBLEND_CROSSOVER_RATE(0.6);
+        GAFloat.setMUTATION_RATE(0.01);
+        GAFloat.setFIXED_OMEGA_RATE(0.3);
+        GAFloat.setNUMBER_OF_GENERATIONS(1000);
+        
+        run.run();
+    }
 }

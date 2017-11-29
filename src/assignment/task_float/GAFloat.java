@@ -18,9 +18,10 @@ public class GAFloat {
 
     //input file
     private String inputFileDir;
-    
+
     //output to file
-    CSVFileWriter out;
+    CSVFileWriter outTraining;
+    CSVFileWriter outTesting;
     boolean write = false;
 
     //HYPER PARAMETERS
@@ -64,7 +65,7 @@ public class GAFloat {
     public void setCONDITION_LENGTH(int CONDITION_LENGTH) {
         this.CONDITION_LENGTH = CONDITION_LENGTH;
     }
-    
+
     private static double variable_omega_rate;
 
 //    private int POPULATION_SIZE;
@@ -94,13 +95,16 @@ public class GAFloat {
         }
         write = false;
     }
-    
+
     //constructor to allow writing to file
     public GAFloat(String inputFileName, String csvFileDir, String csvFileName) {
         if (inputFileName.equals("data3.txt")) {
             inputFileDir = "/Files/data3.txt";
         }
-        out = new CSVFileWriter(csvFileDir, csvFileName, "worst,averge,best");
+        String trainingFileName = csvFileName.substring(0, csvFileName.length() - 4) + "_TRAIN.csv";
+        String testingFileName = csvFileName.substring(0, csvFileName.length() - 4) + "_TEST.csv";
+        outTraining = new CSVFileWriter(csvFileDir, trainingFileName, "worst,averge,best");
+        outTesting = new CSVFileWriter(csvFileDir, testingFileName, "worst,averge,best");
         write = true;
         POPULATION_SIZE = 25;
         CHROMOSOME_LENGTH = 32;
@@ -186,9 +190,9 @@ public class GAFloat {
         find location of where to start subarray swap
         - maybe limit how much of the old generation I should keep (so it isnt a full clone of the parent!)
         - maybe limit to 3 best parents for 3 worst offspring --> limit to 10% parents?
-        */
+         */
         int offset = 0;
-        int percentOfParents = (parentPopulation.length/100)*10;
+        int percentOfParents = (parentPopulation.length / 100) * 10;
         for (int i = 0; i < percentOfParents; i++) {
             if (parentPopulation[parentPopulation.length - 1].getFitness() > offspringPopulation[i].getFitness()) {
                 offset++;
@@ -286,8 +290,8 @@ public class GAFloat {
             
             Think about replacing this with blending crossover
              */
-//            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
-            Individual[] children = Crossover.blendCrossover(parents[0], parents[1], BLEND_CROSSOVER_RATE);
+            Individual[] children = Crossover.singlePointCrossover(parents[0], parents[1], CROSSOVER_RATE);
+//            Individual[] children = Crossover.blendCrossover(parents[0], parents[1], BLEND_CROSSOVER_RATE);
 
             /* Mutation */
  /*
@@ -304,14 +308,14 @@ public class GAFloat {
                 - omega = 0.5 - ((#correct/total)*0.5) //so we restrict to max of 0.5 leaps in bounds
              */
             calculateVariableMutation(children[0], set);
-            children[0] = Mutation.mutationCreepAndOutputV2(children[0], MUTATION_RATE, FIXED_OMEGA_RATE);
+            children[0] = Mutation.mutationCreepAndOutput(children[0], MUTATION_RATE, variable_omega_rate);
 //            children[0] = Mutation.mutationRandom(children[0], MUTATION_RATE);
             offspringPopulation[i] = children[0];
 
             if (i + 1 < offspringPopulation.length) {
                 i++;
                 calculateVariableMutation(children[1], set);
-                children[1] = Mutation.mutationCreepAndOutputV2(children[1], MUTATION_RATE, FIXED_OMEGA_RATE);
+                children[1] = Mutation.mutationCreepAndOutput(children[1], MUTATION_RATE, variable_omega_rate);
 //                children[1] = Mutation.mutationRandom(children[1], MUTATION_RATE);
                 offspringPopulation[i] = children[1];
             }
@@ -380,15 +384,15 @@ public class GAFloat {
             FitnessFunction.fitnessFunctionCompareRulesAll(set, parentPopulation);
 
             //output to file it initial
-            if(numberOfGenerations == 0) {
+            if (numberOfGenerations == 0) {
                 worstFitness = getWorstFitness(parentPopulation);
                 averageFitness = getAverageFitness(parentPopulation);
                 bestFitness = getBestFitness(parentPopulation, true);
-                if(write) {
-                    out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+                if (write) {
+                    outTraining.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
                 }
             }
-            
+
             /* Generate offspring */
             generateOffspring(set);
 
@@ -403,9 +407,13 @@ public class GAFloat {
             averageFitness = getAverageFitness(offspringPopulation);
             bestFitness = getBestFitness(offspringPopulation, false);
             if (write) {
-                out.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+                if (numberOfGenerations % 10 == 0) {
+                    outTesting.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+                } else {
+                    outTraining.writePopulation(worstFitness + "," + averageFitness + "," + bestFitness);
+                }
             }
-            
+
             /* Evaluate stop condition */
             stopCondition = stopCondition(trainingSet, bestIndividual);
 
@@ -417,9 +425,10 @@ public class GAFloat {
         }
 
         if (write) {
-            out.close();
+            outTraining.close();
+            outTesting.close();
         }
-        
+
         /* Onct GA/Evolution has finished, lets test the best individual on testing set */
         System.out.println("Stopped");
         System.out.println("Number of Generations: " + numberOfGenerations);
@@ -440,7 +449,7 @@ public class GAFloat {
         }
         return worst;
     }
-    
+
     private double getAverageFitness(Individual[] population) {
         double averageFitness = 0;
         for (Individual individual : population) {
@@ -449,7 +458,7 @@ public class GAFloat {
         averageFitness /= population.length;
         return averageFitness;
     }
-    
+
     private double getBestFitness(Individual[] population, boolean initial) {
         //return if initial population
         if (initial) {
@@ -463,7 +472,7 @@ public class GAFloat {
         }
         return bestIndividual.getFitness();
     }
-    
+
     public static void main(String[] args) {
 
         GAFloat ga = new GAFloat("data3.txt");
