@@ -308,15 +308,15 @@ public class GABool {
 //            parentPopulationCopy[i].setFitness(parentPopulation[i].getFitness()); 
         }
 
-        FitnessFunction.convertFitnessQuadratic(parentPopulationCopy, 2);
-        FitnessFunction.addFitnessBiasToHighest(parentPopulationCopy, 100);
+//        FitnessFunction.convertFitnessQuadratic(parentPopulationCopy, 2);
+//        FitnessFunction.addFitnessBiasToHighest(parentPopulationCopy, 100);
 
         /* Selection / Crossover / Mutation */
         for (int i = 0; i < offspringPopulation.length; i++) {
             /* Selection */
             Individual[] parents = new Individual[2];
-            parents[0] = Selection.fitnessProportionateSelection(parentPopulationCopy);
-            parents[1] = Selection.fitnessProportionateSelection(parentPopulationCopy);
+            parents[0] = Selection.tornamentSelection(parentPopulationCopy);
+            parents[1] = Selection.tornamentSelection(parentPopulationCopy);
 
             /* Crossover */
             //creates 2 children
@@ -324,22 +324,22 @@ public class GABool {
 
             /* Mutation */
             offspringPopulation[i] = children[0];
-            offspringPopulation[i] = Mutation.mutationGenericsV2(offspringPopulation[i], MUTATION_RATE);
+            offspringPopulation[i] = Mutation.mutationGenerics(offspringPopulation[i], MUTATION_RATE);
             if (i + 1 < offspringPopulation.length) {
                 i++;
                 offspringPopulation[i] = children[1];
-                offspringPopulation[i] = Mutation.mutationGenericsV2(offspringPopulation[i], MUTATION_RATE);
+                offspringPopulation[i] = Mutation.mutationGenerics(offspringPopulation[i], MUTATION_RATE);
             }
         }
 
         //calculate children fitness
         FitnessFunction.fitnessFunctionCompareRulesAll(dataset, offspringPopulation);
-        FitnessFunction.fitnessFunctionCompareRulesAll(dataset, parentPopulation);
+//        FitnessFunction.fitnessFunctionCompareRulesAll(dataset, parentPopulation);
         //sort fitness's of each population
-        sortPopulations();
+//        sortPopulations();
 
         //perform sub array swap
-        swapWorstForBest();
+//        swapWorstForBest();
 
         //set best individual
         setBestIndividual();
