@@ -8,6 +8,8 @@ Fitness quadratic, fitness exponential, fitness bias towards best
 Fitness proportionate selection (roulette wheel), mutation v2 (might not need to test)
 Sorting populate, and swap part of generations
 
+Expecting simmilar/good results for the 
+
 pop 200, gene 5, crossover 0.9, mutation 0.01
 fitness 64
 [1, 1, 0, 2, 2, 2],0

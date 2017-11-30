@@ -308,8 +308,8 @@ public class GABool {
             parentPopulationCopy[i] = Individual.clone(parentPopulation[i]); 
         }
 
-        FitnessFunction.convertFitnessQuadratic(parentPopulationCopy, 2);
-        FitnessFunction.addFitnessBiasToHighest(parentPopulationCopy, 100);
+//        FitnessFunction.convertFitnessQuadratic(parentPopulationCopy, 2);
+//        FitnessFunction.addFitnessBiasToHighest(parentPopulationCopy, 100);
 
         /* Selection / Crossover / Mutation */
         for (int i = 0; i < offspringPopulation.length; i++) {
