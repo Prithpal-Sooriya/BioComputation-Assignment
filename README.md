@@ -1,5 +1,5 @@
 # Biocomputation Coursework
-
+ 
 - DATA1.txt SCHEMA
 01111 1,
 12201 0,
